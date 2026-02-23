@@ -18,6 +18,7 @@
   - [x] filtry kalmana
   - [ ] Odometria
   - [ ] Kamery
+  - [ ] behavior tree / state machine
 - [ ] Rozbudowa apki do sterowania 
   - [ ] Podgląd kamer
 - [ ] Spisać hasła do różnych rzeczy sieciowych 
@@ -28,6 +29,10 @@
   - [ ] Pre-definiowane kordynaty tych markerów
 - [ ] Empiricznie sprawdzić macierze do filtru kalmana
 - [ ] trzymadełko na kamerę
+- [ ] rviz config
+- [ ] switch detection in camera (openCV/YOLO)
+  - https://github.com/ros-perception/vision_msgs
+- [ ] aruco/QR auto decode 
 
 # Sekcja ROS2
 
@@ -54,6 +59,10 @@ docker run --rm -it  orion
 ```
 
 # Sekcja organizacja - skróty itp
+
+`sudo apt install ros-$ROS_DISTRO-image-view`
+`ros2 run image_view image_view --ros-args -r image:=<image topic>`
+
 
 ## ROS2
 - nazwa paczki {nazwa}_pkg
