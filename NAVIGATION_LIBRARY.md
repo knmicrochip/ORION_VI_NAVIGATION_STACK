@@ -8,9 +8,13 @@ jest już nie wspierane
 `elevation_mapping` nie ma paczki ros2
 już nie jest wspierane
 
-[Spatio-Temporal Voxel Layer](https://github.com/SteveMacenski/spatio_temporal_voxel_layer)
+~~[Spatio-Temporal Voxel Layer](https://github.com/SteveMacenski/spatio_temporal_voxel_layer)
 https://index.ros.org/p/spatio_temporal_voxel_layer/#jazzy
-`sudo apt install ros-jazzy-spatio-temporal-voxel-layer`
+`sudo apt install ros-jazzy-spatio-temporal-voxel-layer`~~
+
+Jak zrobić bringup:
+https://docs.nav2.org/tuning/index.html#nav2-launch-options
+
 
 AI SLOP:
 ```
