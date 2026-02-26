@@ -100,19 +100,20 @@ def generate_launch_description():
     		# )
 
 		]
-
-		nav2_bringup_launch = IncludeLaunchDescription(
-			PythonLaunchDescriptionSource(
-				#można to zrobić ładniej
-				os.path.join(FindPackageShare(package='nav2_bringup').find('nav2_bringup'),'launch','bringup_launch.py')
-
-				launch_arguments={
-					#tmp
-				}
-			)
-		)
-
-		ld.add_action(nav2_bringup_launch)
-
-		return ld
 	)
+
+	# nav2_bringup_launch = IncludeLaunchDescription(
+	# 	PythonLaunchDescriptionSource(
+	# 		#można to zrobić ładniej
+	# 		os.path.join(FindPackageShare(package='nav2_bringup').find('nav2_bringup'),'launch','bringup_launch.py')),
+
+	# 		launch_arguments={
+	# 			#tmp
+	# 		}
+	# 	)
+	
+
+	# ld.add_action(nav2_bringup_launch)
+
+	return ld
+	
