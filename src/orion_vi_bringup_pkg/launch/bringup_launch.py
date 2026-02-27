@@ -36,7 +36,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     # Get the launch directory
-    bringup_dir = get_package_share_directory('nav2_bringup')
+    bringup_dir = get_package_share_directory('orion_vi_bringup_pkg')
     launch_dir = os.path.join(bringup_dir, 'launch')
 
     # Create the launch configuration variables

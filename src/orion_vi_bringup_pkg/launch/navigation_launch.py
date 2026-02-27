@@ -29,7 +29,7 @@ from nav2_common.launch import RewrittenYaml
 
 def generate_launch_description():
 	# Get the launch directory
-	bringup_dir = get_package_share_directory('nav2_bringup')
+	bringup_dir = get_package_share_directory('orion_vi_bringup_pkg')
 
 	namespace = LaunchConfiguration('namespace')
 	use_sim_time = LaunchConfiguration('use_sim_time')
@@ -122,7 +122,7 @@ def generate_launch_description():
 	declare_log_level_cmd = DeclareLaunchArgument(
 		'log_level', default_value='info', description='log level'
 	)
-	assert use_composition == False 
+	# assert use_composition == False #this might not work
 	# load_nodes = GroupAction(
 	#     condition=IfCondition(PythonExpression(['not ', use_composition])),
 	#     actions=[
