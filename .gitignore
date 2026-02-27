@@ -55,3 +55,6 @@ CATKIN_IGNORE
 .vscode/browse.vc.db-shm
 .vscode/browse.vc.db-wal
 test.log
+test.py
+
+src/orion_vi_bringup_pkg/launch/from_nav2
