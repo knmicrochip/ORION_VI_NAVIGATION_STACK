@@ -26,7 +26,7 @@
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
-              <uri>file:///home/alexan/.gz/models/rover/ERC_new.obj</uri>
+              <uri>file://./ERC_new.obj</uri>
             </mesh>
           </geometry>
         </visual>
@@ -34,7 +34,7 @@
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
-              <uri>file:///home/alexan/.gz/models/rover/ERC_new.obj</uri>
+              <uri>file://./ERC_new.obj</uri>
             </mesh>
           </geometry>
         </collision>
@@ -43,7 +43,7 @@
 
     <!-- Spawn the rover model (SDF file) -->
     <include>
-      <uri>file:///home/alexan/.gz/models/rover/rover_model.urdf</uri>
+      <uri>file://./rover_model.urdf</uri>
       <name>rover</name>
     </include>
 
