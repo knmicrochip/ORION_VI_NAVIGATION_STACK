@@ -34,6 +34,19 @@
   - https://github.com/ros-perception/vision_msgs
 - [ ] aruco/QR auto decode 
 
+# AI Trening TODO
+- [ ] Create `button_detection_pkg` ROS 2 package skeleton in `src/` with proper setup.py, package.xml, and directory structure
+- [ ] Write `capture_images.py` - a RealSense image capture utility that saves RGB+depth frames with metadata for dataset creation
+- [ ] Create `data.yaml` YOLO dataset config and `README.md` with annotation instructions (Roboflow/CVAT workflow)
+- [ ] Write `train.py` training script using Ultralytics YOLOv8, with configurable hyperparameters and data augmentation
+- [ ] Write `export_model.py` to convert trained .pt model to ONNX/TensorRT for deployment
+- [ ] Implement `detector_node.py` - ROS 2 node subscribing to RealSense topics, running YOLO inference, publishing Detection2DArray and debug images
+- [ ] Write `model_inference.py` - YOLO wrapper class handling model loading (PT/ONNX), inference, and post-processing
+- [ ] Create `button_detection_launch.py` with parameters for model path, confidence threshold, and camera topics
+- [ ] Create `detection_config.yaml` with class names, confidence thresholds, depth sampling parameters, and camera config
+- [ ] Add ArUco-based panel localization fusion - combine panel pose from ArUco with YOLO detections for 3D switch coordinates
+
+
 # Sekcja ROS2
 
 - do rozważenia nav2 albo easymapping

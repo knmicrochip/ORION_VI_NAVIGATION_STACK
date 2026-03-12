@@ -1,0 +1,47 @@
+button_detector:
+  ros__parameters:
+    # Path to trained YOLO weights (.pt or .onnx)
+    model_path: "models/best.pt"
+
+    # Detection thresholds
+    confidence: 0.5
+    iou_threshold: 0.45
+    imgsz: 640
+    device: ""  # empty = auto; "cpu", "0" for GPU 0
+
+    # RealSense D435i depth sensor scale (raw uint16 -> metres)
+    depth_scale: 0.001
+
+    # Whether detection starts immediately or waits for ~/enable service
+    enabled: false
+
+    # RealSense topic names
+    color_topic: "/camera/color/image_raw"
+    depth_topic: "/camera/aligned_depth_to_color/image_raw"
+    camera_info_topic: "/camera/color/camera_info"
+
+    # Publish annotated debug image on ~/debug_image
+    publish_debug_image: true
+
+aruco_fusion:
+  ros__parameters:
+    # ArUco dictionary for the panel markers
+    aruco_dictionary: "DICT_5X5_100"
+
+    # Expected panel ArUco marker IDs (from ERC rules, subject to Update Report #3)
+    panel_marker_ids: [51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64]
+
+    # Physical marker size in metres (150mm as per ERC spec)
+    marker_size_m: 0.15
+
+    # TF frames
+    camera_frame: "camera_color_optical_frame"
+    base_frame: "base_link"
+
+    # Minimum detections to consider panel found
+    min_markers_for_pose: 1
+
+    # Subscribe to detections from the YOLO node
+    detection_topic: "/button_detector/detections"
+    color_topic: "/camera/color/image_raw"
+    camera_info_topic: "/camera/color/camera_info"
