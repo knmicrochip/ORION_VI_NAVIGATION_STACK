@@ -89,7 +89,7 @@ sudo apt update && sudo apt install ros-jazzy-realsense2-* -y
 ```
 
 ```
-sudo apt install ros-$ROS_DISTRO-rtabmap-ros
+sudo apt install ros-$ROS_DISTRO-rtabmap-ros ros-$ROS_DISTRO-aruco-opencv
 ```
 
 
@@ -99,8 +99,7 @@ https://github.com/realsenseai/realsense-ros?tab=readme-ov-file#installation-on-
 install rtab-map 
 https://deepwiki.com/introlab/rtabmap_ros/2-installation-and-setup
 
-install ros_aruco_opencv
-https://github.com/fictionlab/ros_aruco_opencv/tree/jazzy
+
 
 ---
 # Other stuff
