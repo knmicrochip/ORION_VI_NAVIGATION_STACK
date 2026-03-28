@@ -100,3 +100,12 @@ router szuflada ip: ping 192.168.1.102
 
 ustawić manualnie ip na laptopie podłączonym do switcha na stole.
 
+# Opis
+
+### Software:
+
+The rover will be using a ROS™ 2 based stack for localization, navigation and control. For SLAM we will be using Realsense™ cameras with RTAB-Map library. That data will be converted into costmap that is usable by NAV2 for path planning. Custom controller will issue commands over MQTT to execute that path. Gazebo simulator will be used to validate used algorithms. 
+
+### Oprogramowanie:
+
+Łazik będzie używał ROS™ 2 do lokalizacji, nawigacji i kontrolowania napędem. Aby uzyskać SLAM użyjemy biblioteki RTAB-Map z kamerami Realsense™. Uzyskane dane zostaną przekonwertowane w mapę kosztów która będzie użyta do planowania trasy. Napiszemy własny kontroler który będzie wysyłał komendy po MQTT do napędu aby dostać się do celu. Użyjemy symulatora Gazebo do walidacji naszych algorytmów.
