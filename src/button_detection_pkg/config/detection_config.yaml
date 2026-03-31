@@ -15,10 +15,16 @@ button_detector:
     # Whether detection starts immediately or waits for ~/enable service
     enabled: false
 
-    # RealSense topic names
-    color_topic: "/camera/color/image_raw"
+    # Camera mode: set use_depth=true for RealSense, false for USB camera
+    use_depth: false
+    # Set use_rectified=true to use the bird's-eye panel image from panel_mapper
+    use_rectified: false
+    rectified_topic: "/panel_mapper/rectified_panel"
+
+    # Camera topic names (USB camera defaults)
+    color_topic: "/panel_camera/image_raw"
     depth_topic: "/camera/aligned_depth_to_color/image_raw"
-    camera_info_topic: "/camera/color/camera_info"
+    camera_info_topic: "/panel_camera/camera_info"
 
     # Publish annotated debug image on ~/debug_image
     publish_debug_image: true
@@ -43,5 +49,36 @@ aruco_fusion:
 
     # Subscribe to detections from the YOLO node
     detection_topic: "/button_detector/detections"
-    color_topic: "/camera/color/image_raw"
-    camera_info_topic: "/camera/color/camera_info"
+    color_topic: "/panel_camera/image_raw"
+    camera_info_topic: "/panel_camera/camera_info"
+
+panel_mapper:
+  ros__parameters:
+    # Panel layout and task sequence config files (absolute paths or
+    # relative to the working directory)
+    panel_layout_file: ""
+    task_sequence_file: ""
+
+    # ArUco dictionary for internal panel homography detection
+    aruco_dictionary: "DICT_5X5_100"
+    # Physical marker size in metres (used for panel-space corner offsets)
+    marker_size_m: 0.05
+
+    # Temporal state filter: require threshold-of-window frames to agree
+    temporal_window: 5
+    temporal_threshold: 4
+
+    # Current target element (can be set at runtime via param or service)
+    target_element: ""
+
+    # Camera topics (USB camera defaults)
+    color_topic: "/panel_camera/image_raw"
+    camera_info_topic: "/panel_camera/camera_info"
+    detection_topic: "/button_detector/detections"
+
+    # TF frames
+    camera_frame: "panel_camera_optical_frame"
+    base_frame: "base_link"
+
+    # Rectified image output resolution (width in pixels; height is scaled)
+    rectified_size: 660

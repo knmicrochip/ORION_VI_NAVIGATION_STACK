@@ -60,15 +60,20 @@ class DetectorNode(Node):
         self.declare_parameter("depth_scale", 0.001)
         self.declare_parameter("enabled", True)
         self.declare_parameter(
-            "color_topic", "/camera/color/image_raw"
+            "color_topic", "/panel_camera/image_raw"
         )
         self.declare_parameter(
             "depth_topic", "/camera/aligned_depth_to_color/image_raw"
         )
         self.declare_parameter(
-            "camera_info_topic", "/camera/color/camera_info"
+            "camera_info_topic", "/panel_camera/camera_info"
         )
         self.declare_parameter("publish_debug_image", True)
+        self.declare_parameter("use_depth", False)
+        self.declare_parameter("use_rectified", False)
+        self.declare_parameter(
+            "rectified_topic", "/panel_mapper/rectified_panel"
+        )
 
         model_path = (
             self.get_parameter("model_path").get_parameter_value().string_value
@@ -100,6 +105,16 @@ class DetectorNode(Node):
             .get_parameter_value()
             .bool_value
         )
+        self._use_depth = (
+            self.get_parameter("use_depth")
+            .get_parameter_value()
+            .bool_value
+        )
+        self._use_rectified = (
+            self.get_parameter("use_rectified")
+            .get_parameter_value()
+            .bool_value
+        )
 
         # -- Model --
         self.get_logger().info(f"Loading model from {model_path} ...")
@@ -123,7 +138,7 @@ class DetectorNode(Node):
         self._bridge = CvBridge()
         self._camera_intrinsics: Optional[CameraIntrinsics] = None
 
-        # -- Subscribers (message_filters for time-sync) --
+        # -- Subscribers --
         color_topic = (
             self.get_parameter("color_topic")
             .get_parameter_value()
@@ -139,20 +154,43 @@ class DetectorNode(Node):
             .get_parameter_value()
             .string_value
         )
-
-        self._sub_color = Subscriber(
-            self, Image, color_topic, qos_profile=SENSOR_QOS
-        )
-        self._sub_depth = Subscriber(
-            self, Image, depth_topic, qos_profile=SENSOR_QOS
+        rectified_topic = (
+            self.get_parameter("rectified_topic")
+            .get_parameter_value()
+            .string_value
         )
 
-        self._ts = ApproximateTimeSynchronizer(
-            [self._sub_color, self._sub_depth],
-            queue_size=5,
-            slop=0.05,
-        )
-        self._ts.registerCallback(self._on_images)
+        if self._use_rectified:
+            # Subscribe to the rectified (bird's-eye) panel image from
+            # panel_mapper — no depth needed, no time-sync needed.
+            self._sub_rectified = self.create_subscription(
+                Image, rectified_topic, self._on_rectified, SENSOR_QOS
+            )
+            self.get_logger().info(
+                f"Using rectified image from: {rectified_topic}"
+            )
+        elif self._use_depth:
+            # Sync color + depth (RealSense mode)
+            self._sub_color = Subscriber(
+                self, Image, color_topic, qos_profile=SENSOR_QOS
+            )
+            self._sub_depth = Subscriber(
+                self, Image, depth_topic, qos_profile=SENSOR_QOS
+            )
+            self._ts = ApproximateTimeSynchronizer(
+                [self._sub_color, self._sub_depth],
+                queue_size=5,
+                slop=0.05,
+            )
+            self._ts.registerCallback(self._on_images)
+        else:
+            # Color-only mode (USB camera — no depth)
+            self._sub_color_only = self.create_subscription(
+                Image, color_topic, self._on_color_only, SENSOR_QOS
+            )
+            self.get_logger().info(
+                f"Color-only mode (no depth) on: {color_topic}"
+            )
 
         self._sub_cam_info = self.create_subscription(
             CameraInfo,
@@ -197,6 +235,7 @@ class DetectorNode(Node):
         )
 
     def _on_images(self, color_msg: Image, depth_msg: Image):
+        """Callback for synchronized color + depth (RealSense mode)."""
         if not self._enabled or self._detector is None:
             return
 
@@ -223,6 +262,40 @@ class DetectorNode(Node):
             vis = self._detector.draw_detections(bgr, detections)
             debug_msg = self._bridge.cv2_to_imgmsg(vis, encoding="bgr8")
             debug_msg.header = color_msg.header
+            self._pub_debug.publish(debug_msg)
+
+    def _on_color_only(self, color_msg: Image):
+        """Callback for color-only mode (USB camera, no depth)."""
+        if not self._enabled or self._detector is None:
+            return
+
+        bgr = self._bridge.imgmsg_to_cv2(color_msg, desired_encoding="bgr8")
+        detections = self._detector.detect(bgr)
+
+        det_msg = self._build_detection_msg(detections, color_msg.header)
+        self._pub_detections.publish(det_msg)
+
+        if self._publish_debug:
+            vis = self._detector.draw_detections(bgr, detections)
+            debug_msg = self._bridge.cv2_to_imgmsg(vis, encoding="bgr8")
+            debug_msg.header = color_msg.header
+            self._pub_debug.publish(debug_msg)
+
+    def _on_rectified(self, img_msg: Image):
+        """Callback for rectified panel image from panel_mapper."""
+        if not self._enabled or self._detector is None:
+            return
+
+        bgr = self._bridge.imgmsg_to_cv2(img_msg, desired_encoding="bgr8")
+        detections = self._detector.detect(bgr)
+
+        det_msg = self._build_detection_msg(detections, img_msg.header)
+        self._pub_detections.publish(det_msg)
+
+        if self._publish_debug:
+            vis = self._detector.draw_detections(bgr, detections)
+            debug_msg = self._bridge.cv2_to_imgmsg(vis, encoding="bgr8")
+            debug_msg.header = img_msg.header
             self._pub_debug.publish(debug_msg)
 
     def _on_enable(self, request: SetBool.Request, response: SetBool.Response):

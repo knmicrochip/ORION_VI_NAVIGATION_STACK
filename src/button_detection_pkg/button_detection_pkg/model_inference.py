@@ -50,12 +50,13 @@ class Detection:
 CLASS_NAMES = [
     "main_switch_off",
     "main_switch_on",
-    "lever_switch_up",
-    "lever_switch_down",
+    "breaker_off",
+    "breaker_on",
     "rotary_switch",
     "socket_empty",
     "socket_plugged",
-    "rotary_power_switch",
+    "rotary_power_off",
+    "rotary_power_on",
     "indicator_off",
     "indicator_on",
 ]
@@ -215,14 +216,15 @@ class PanelDetector:
     def _class_color(class_id: int) -> tuple:
         """Deterministic colour per class (BGR)."""
         palette = [
-            (0, 0, 200),    # main_switch_off  — red
-            (0, 200, 0),    # main_switch_on   — green
-            (200, 100, 0),  # lever_switch_up   — teal
-            (200, 0, 100),  # lever_switch_down — purple
+            (0, 0, 200),    # main_switch_off   — red
+            (0, 200, 0),    # main_switch_on    — green
+            (200, 100, 0),  # breaker_off       — teal
+            (200, 0, 100),  # breaker_on        — purple
             (0, 165, 255),  # rotary_switch     — orange
             (180, 180, 0),  # socket_empty      — cyan
             (0, 255, 255),  # socket_plugged    — yellow
-            (255, 100, 50), # rotary_power      — light blue
+            (100, 50, 50),  # rotary_power_off  — dark blue
+            (255, 100, 50), # rotary_power_on   — light blue
             (100, 100, 100),# indicator_off     — grey
             (0, 255, 0),    # indicator_on      — bright green
         ]

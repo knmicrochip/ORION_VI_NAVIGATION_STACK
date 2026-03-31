@@ -3,7 +3,7 @@
 
 # After annotation, populate these paths relative to this file
 # or use absolute paths on your training machine.
-path: ./  # dataset root (change to absolute path if needed)
+path: /home/user/Documents/ORION_VI_NAVIGATION_STACK/src/button_detection_pkg/dataset
 train: images/train
 val: images/val
 test: images/test
@@ -13,11 +13,12 @@ test: images/test
 names:
   0: main_switch_off
   1: main_switch_on
-  2: lever_switch_up
-  3: lever_switch_down
+  2: breaker_off
+  3: breaker_on
   4: rotary_switch
   5: socket_empty
   6: socket_plugged
-  7: rotary_power_switch
-  8: indicator_off
-  9: indicator_on
+  7: rotary_power_off
+  8: rotary_power_on
+  9: indicator_off
+  10: indicator_on

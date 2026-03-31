@@ -1,0 +1,50 @@
+# ERC 2026 Maintenance Task - ordered sequence of panel operations.
+#
+# The panel_mapper node loads this file and steps through the sequence.
+# Use ~/set_target or ~/advance_target services to control progression,
+# or set target_element param directly.
+#
+# "element" must match a key in panel_layout.yaml -> elements.
+# "target_state" is the desired state after manipulation:
+#   main_switch  -> on / off
+#   breaker     -> on / off
+#   rotary_switch -> any (judge specifies position at competition)
+#   socket       -> plugged / empty
+#   rotary_power -> on / off
+#
+# Fill in the exact sequence after the judge explains the task during
+# the 15-minute prep window.
+
+task_sequence:
+  - element: main_switch
+    target_state: "on"
+
+  - element: breaker_1
+    target_state: "off"
+
+  - element: breaker_2
+    target_state: "on"
+
+  - element: breaker_3
+    target_state: "off"
+
+  - element: breaker_4
+    target_state: "on"
+
+  - element: rotary_1
+    target_state: "any"
+
+  - element: rotary_2
+    target_state: "any"
+
+  - element: rotary_3
+    target_state: "any"
+
+  - element: socket_1
+    target_state: "plugged"
+
+  - element: rotary_power_1
+    target_state: "on"
+
+  - element: rotary_power_2
+    target_state: "on"

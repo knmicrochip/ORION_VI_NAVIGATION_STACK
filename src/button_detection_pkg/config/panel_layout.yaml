@@ -1,0 +1,140 @@
+# ERC 2026 Maintenance Panel layout definition.
+# Positions are in millimetres from the panel's top-left corner.
+#
+# IMPORTANT: These are PLACEHOLDER positions.  Fill them in during the
+# 15-minute competition prep window using calibrate_panel.py or manual
+# measurement.  The panel is 330 mm wide x 450 mm tall.
+
+panel:
+  width_mm: 330.0
+  height_mm: 450.0
+
+  # ArUco markers physically placed on the panel.
+  # key = marker ID, value = centre position on the panel in mm.
+  # Measure these during prep -- they anchor the homography.
+  aruco_markers:
+    51: {x_mm: 15.0,  y_mm: 15.0}    # top-left corner marker
+    52: {x_mm: 315.0, y_mm: 15.0}    # top-right corner marker
+    53: {x_mm: 15.0,  y_mm: 435.0}   # bottom-left corner marker
+    54: {x_mm: 315.0, y_mm: 435.0}   # bottom-right corner marker
+
+  # Panel elements with expected positions.
+  # "type" must match one of the YOLO class families:
+  #   main_switch | breaker | rotary_switch | socket
+  #   rotary_power | indicator
+  # "tolerance_mm" is the max distance for matching a YOLO detection to
+  # this element during spatial identification.
+  elements:
+    main_switch:
+      type: main_switch
+      x_mm: 280.0
+      y_mm: 60.0
+      tolerance_mm: 25.0
+
+    breaker_1:
+      type: breaker
+      x_mm: 200.0
+      y_mm: 170.0
+      tolerance_mm: 20.0
+
+    breaker_2:
+      type: breaker
+      x_mm: 230.0
+      y_mm: 170.0
+      tolerance_mm: 20.0
+
+    breaker_3:
+      type: breaker
+      x_mm: 260.0
+      y_mm: 170.0
+      tolerance_mm: 20.0
+
+    breaker_4:
+      type: breaker
+      x_mm: 200.0
+      y_mm: 220.0
+      tolerance_mm: 20.0
+
+    rotary_1:
+      type: rotary_switch
+      x_mm: 200.0
+      y_mm: 280.0
+      tolerance_mm: 20.0
+
+    rotary_2:
+      type: rotary_switch
+      x_mm: 240.0
+      y_mm: 280.0
+      tolerance_mm: 20.0
+
+    rotary_3:
+      type: rotary_switch
+      x_mm: 280.0
+      y_mm: 280.0
+      tolerance_mm: 20.0
+
+    rotary_4:
+      type: rotary_switch
+      x_mm: 200.0
+      y_mm: 330.0
+      tolerance_mm: 20.0
+
+    rotary_5:
+      type: rotary_switch
+      x_mm: 240.0
+      y_mm: 330.0
+      tolerance_mm: 20.0
+
+    socket_1:
+      type: socket
+      x_mm: 80.0
+      y_mm: 330.0
+      tolerance_mm: 30.0
+
+    socket_2:
+      type: socket
+      x_mm: 130.0
+      y_mm: 330.0
+      tolerance_mm: 30.0
+
+    rotary_power_1:
+      type: rotary_power
+      x_mm: 80.0
+      y_mm: 130.0
+      tolerance_mm: 25.0
+
+    rotary_power_2:
+      type: rotary_power
+      x_mm: 150.0
+      y_mm: 130.0
+      tolerance_mm: 25.0
+
+    indicator_1:
+      type: indicator
+      x_mm: 60.0
+      y_mm: 230.0
+      tolerance_mm: 15.0
+
+    indicator_2:
+      type: indicator
+      x_mm: 90.0
+      y_mm: 230.0
+      tolerance_mm: 15.0
+
+    indicator_3:
+      type: indicator
+      x_mm: 120.0
+      y_mm: 230.0
+      tolerance_mm: 15.0
+
+    indicator_4:
+      type: indicator
+      x_mm: 150.0
+      y_mm: 230.0
+      tolerance_mm: 15.0
+
+    indicator_5:
+      type: indicator
+      x_mm: 180.0
+      y_mm: 230.0
+      tolerance_mm: 15.0

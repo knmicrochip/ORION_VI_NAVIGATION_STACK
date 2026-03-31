@@ -35,6 +35,7 @@ setup(
         'console_scripts': [
             'detector_node = button_detection_pkg.detector_node:main',
             'aruco_fusion_node = button_detection_pkg.aruco_fusion:main',
+            'panel_mapper = button_detection_pkg.panel_mapper:main',
         ],
     },
 )
