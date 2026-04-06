@@ -162,7 +162,7 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(
                     os.path.join(launch_dir, 'slam_launch.py')
                 ),
-                condition=IfCondition(PythonExpression([slam, ' and ', use_localization])),
+                # condition=IfCondition(PythonExpression([slam, ' and ', use_localization])),
                 launch_arguments={
                     'namespace': namespace,
                     'use_sim_time': use_sim_time,
@@ -204,6 +204,22 @@ def generate_launch_description():
         ]
     )
 
+    # bringup_slam_group = GroupAction([
+    #             IncludeLaunchDescription(
+    #             PythonLaunchDescriptionSource(
+    #                 os.path.join(launch_dir, 'slam_launch.py')
+    #             ),
+    #             # condition=IfCondition(PythonExpression([slam, ' and ', use_localization])),
+    #             launch_arguments={
+    #                 'namespace': namespace,
+    #                 'use_sim_time': use_sim_time,
+    #                 'autostart': autostart,
+    #                 'use_respawn': use_respawn,
+    #                 'params_file': params_file,
+    #             }.items(),
+    #         )
+    # ])
+
     # Create the launch description and populate
     ld = LaunchDescription()
 
@@ -225,5 +241,6 @@ def generate_launch_description():
 
     # Add the actions to launch all of the navigation nodes
     ld.add_action(bringup_cmd_group)
+    # ld.add_action(bringup_slam_group)
 
     return ld
