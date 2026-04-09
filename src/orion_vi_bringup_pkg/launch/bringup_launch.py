@@ -171,6 +171,20 @@ def generate_launch_description():
                     'params_file': params_file,
                 }.items(),
             ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(launch_dir, 'aruco_launch.py')
+                ),
+                # condition=IfCondition(PythonExpression([slam, ' and ', use_localization])),
+                launch_arguments={
+                    # 'namespace': namespace,
+                    # 'use_sim_time': use_sim_time,
+                    # 'autostart': autostart,
+                    # 'use_respawn': use_respawn,
+                    # 'params_file': params_file,
+                }.items(),
+            ),
+
             # IncludeLaunchDescription(
             #     PythonLaunchDescriptionSource(
             #         os.path.join(launch_dir, 'localization_launch.py')

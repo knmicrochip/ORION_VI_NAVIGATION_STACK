@@ -6,7 +6,7 @@ def generate_launch_description():
         Node(
             package='aruco_opencv',
             executable='aruco_tracker_autostart',
-            parameters=[{'cam_base_topic':'/camera/camera/color/image_raw',
+            parameters=[{'cam_base_topic':'/camera/color/image_raw',
                          'marker_size':0.15,
                          'marker_dict':"5X5_100"
                         }]
