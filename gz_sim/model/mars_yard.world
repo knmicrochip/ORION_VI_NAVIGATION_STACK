@@ -34,7 +34,7 @@
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
-              <uri>file://./ERC_Groundv4_small.glb</uri>
+              <uri>file://./ERC_Groundv5_small.glb</uri>
             </mesh>
           </geometry>
         </collision>
