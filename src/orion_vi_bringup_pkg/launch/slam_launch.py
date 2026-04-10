@@ -11,7 +11,7 @@ import os
 
 def generate_launch_description():
 	vo_parameters={
-		'frame_id':'camera_link',
+		'frame_id':'base_link',
 		'wait_imu_to_init':True}
 		#add params to reset odom
 
@@ -23,7 +23,7 @@ def generate_launch_description():
 		('right/camera_info', '/camera/infra2/camera_info')]
 	
 	slam_parameters={
-		'frame_id':'camera_link',
+		'frame_id': 'base_link',
 		'subscribe_depth':True,
 		'subscribe_odom_info':True,
 		'approx_sync':False,
@@ -77,6 +77,19 @@ def generate_launch_description():
                          'world_frame':'enu', 
                          'publish_tf':False}],
             remappings=[('imu/data_raw', '/camera/imu')]),
+
+			Node(
+					package='tf2_ros',
+					executable='static_transform_publisher',
+					# output='screen',
+					arguments=[
+						'0.0', '0.0', '-0.5',   # XYZ position
+						'0', '0', '0', #roll pitch yaw (propably) (I hope it's not quaternion)
+						'base_link',
+						'camera_link'
+        				]
+				),
+
 
 			# Node(
 			# 	package='szuflada_pkg',
