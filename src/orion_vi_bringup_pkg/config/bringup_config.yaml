@@ -210,18 +210,19 @@ local_costmap:
       width: 3
       height: 3
       resolution: 0.05
-      footprint: "[[0.3, 0.1], [0.3, -0.1], [-0.3, -0.1], [-0.3, 0.1]]"
+      footprint: "[[0.01, 0.01], [0.01, -0.01], [-0.01, -0.01], [-0.01, 0.01]]" 
       # plugins: ["obstacle_layer", "inflation_layer"]
 
-#       obstacle_layer:
-#         plugin: "nav2_costmap_2d::ObstacleLayer"
-#         observation_sources: scan
-#         scan:
-#           topic: scan
-#           max_obstacle_height: 2.0
-#           clearing: true
-#           marking: true
-#           data_type: "LaserScan"
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: scan
+        scan:
+          topic: scan
+          max_obstacle_height: 2.0
+          min_obstacle_height: 0.1 
+          clearing: true
+          marking: true
+          data_type: "PointCloud2"
 
 #       inflation_layer:
 #         plugin: "nav2_costmap_2d::InflationLayer"

@@ -32,7 +32,7 @@
 - [ ] rviz config
 - [ ] switch detection in camera (openCV/YOLO)
   - https://github.com/ros-perception/vision_msgs
-- [ ] aruco/QR auto decode 
+- [x] aruco/QR auto decode 
 
 # Sekcja ROS2
 

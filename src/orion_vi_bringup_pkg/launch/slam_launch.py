@@ -28,14 +28,33 @@ def generate_launch_description():
 		'subscribe_odom_info':True,
 		'approx_sync':False,
 		'map_filter_radius':0.0,
-		'map_filter_angle':30.0	
+		'map_filter_angle':30.0,
+
+		"landmark_linear_variance": 0.005, #FIX double 
+        "landmark_angular_variance": 999999.0, #FIX double
+		"Optimizer/PriorsIgnored": "False", #WTF! needs string 
+		# "Marker/Priors":'1 -3.56 1.583 0.50 0 1.5708 0|2 -1.495 1.605 4.91 0 3.14159 0'
+		# 1 0 0 1 0 0 0|2 1 0 1 0 0 1.57
+		# "id1 x y z roll pitch yaw"
+		"Marker/Priors":(
+			'14 -1.2 0 0.1 0 0 0' + '|' +
+			# '14 -1 0 2 0 0 0' 
+			'12 0 0 0.1 0 0 0'
+			# + '|' +
+			# '12 -3.56 1.583 0.50 0 1.5708 0' + '|' +
+			# '13 -1.495 1.605 4.91 0 3.14159 0' + '|' +
+			# '14 -1.495 1.605 4.91 0 -3.14159 0'
+		)
 		}
 
 	slam_remappings=[
 		('imu', '/imu/data'),
 		('rgb/image', '/camera/color/image_raw'),
 		('rgb/camera_info', '/camera/color/camera_info'),
-		('depth/image', '/camera/aligned_depth_to_color/image_raw')]
+		('depth/image', '/camera/aligned_depth_to_color/image_raw'),
+		# ("tag_detections", LaunchConfiguration('tag_topic')),  #FIX
+		('aruco_opencv/detections', '/aruco_detections')
+		]
 		
 	ld = LaunchDescription(
 		[
@@ -80,10 +99,10 @@ def generate_launch_description():
 
 			Node(
 					package='tf2_ros',
-					executable='static_transform_publisher',
+					executable='static_transform_publisher', # zamienić na https://github.com/ros/robot_state_publisher
 					# output='screen',
 					arguments=[
-						'0.0', '0.0', '-0.5',   # XYZ position
+						'0.0', '0.0', '0.4',   # XYZ position
 						'0', '0', '0', #roll pitch yaw (propably) (I hope it's not quaternion)
 						'base_link',
 						'camera_link'
