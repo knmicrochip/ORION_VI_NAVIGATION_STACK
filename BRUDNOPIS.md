@@ -4,7 +4,7 @@
 - [x] Dockerfile
   - [x] Podstawowy Dockerfile
   - [ ] Budowa paczki w Dockerfile (`colcon`)
-- [ ] Graf/schemat nawigacji
+- [x] Graf/schemat nawigacji
 - [ ] Konwersja mapy 3D na mapę kosztów
 - [ ] Dobry SLAM to podstawa
 - [ ] Linter
@@ -12,6 +12,9 @@
 - [ ] ~~zamienić .e57 na jakiś normalny format~~
 - [ ] Nav2 i jego pluginy
   - [x] bringup
+    - [ ] kontroler
+    - [ ] TFy
+    - [ ] behaviour tree
 - [ ] Gazebo
   - [ ] TFy
   - [ ] UDRF i SDF do symulacji 

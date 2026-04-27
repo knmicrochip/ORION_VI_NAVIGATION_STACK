@@ -112,3 +112,16 @@ example realsense map: ros2 launch rtabmap_examples realsense_d435i_color.launch
 ### Gazebo
 
 https://gazebosim.org/docs/harmonic/install_ubuntu/
+
+
+### Dodatkowe fajne programy
+
+pokazuje TFy:
+
+`sudo apt install ros-$ROS_DISTRO-rqt-tf-tree`
+
+`ros2 run rqt_tf_tree`
+
+pokazuje kamerę
+
+`ros2 run rqt_image_view rqt_image_view`
