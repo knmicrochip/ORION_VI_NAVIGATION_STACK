@@ -31,7 +31,7 @@ def generate_launch_description():
 		'map_filter_angle':30.0,
 
 		"landmark_linear_variance": 0.005, #FIX double 
-        "landmark_angular_variance": 999999.0, #FIX double
+        "landmark_angular_variance": 9999.0, #FIX double
 		"Optimizer/PriorsIgnored": "False", #WTF! needs string 
 		# "Marker/Priors":'1 -3.56 1.583 0.50 0 1.5708 0|2 -1.495 1.605 4.91 0 3.14159 0'
 		# 1 0 0 1 0 0 0|2 1 0 1 0 0 1.57

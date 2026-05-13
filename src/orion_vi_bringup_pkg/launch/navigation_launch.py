@@ -43,14 +43,14 @@ def generate_launch_description():
 
 	lifecycle_nodes = [
 		'controller_server',
-		# 'smoother_server',
+		'smoother_server',
 		'planner_server',
 		# 'route_server',
-		# 'behavior_server',
+		'behavior_server',
 		# 'velocity_smoother',
 		# 'collision_monitor',
-		# 'bt_navigator',
-		# 'waypoint_follower',
+		'bt_navigator',
+		'waypoint_follower',
 		# 'docking_server',
 	]
 
@@ -262,13 +262,13 @@ def generate_launch_description():
 						parameters=[configured_params],
 						remappings=remappings + [('cmd_vel', 'cmd_vel_nav')],
 					),
-					# ComposableNode(
-					# 	package='nav2_smoother',
-					# 	plugin='nav2_smoother::SmootherServer',
-					# 	name='smoother_server',
-					# 	parameters=[configured_params],
-					# 	remappings=remappings,
-					# ),
+					ComposableNode(
+						package='nav2_smoother',
+						plugin='nav2_smoother::SmootherServer',
+						name='smoother_server',
+						parameters=[configured_params],
+						remappings=remappings,
+					),
 					ComposableNode(
 						package='nav2_planner',
 						plugin='nav2_planner::PlannerServer',
@@ -283,35 +283,35 @@ def generate_launch_description():
 					# 	parameters=[configured_params],
 					# 	remappings=remappings,
 					# ),
-					# ComposableNode(
-					# 	package='nav2_behaviors',
-					# 	plugin='behavior_server::BehaviorServer',
-					# 	name='behavior_server',
-					# 	parameters=[configured_params],
-					# 	remappings=remappings + [('cmd_vel', 'cmd_vel_nav')],
-					# ),
-					# ComposableNode(
-					# 	package='nav2_bt_navigator',
-					# 	plugin='nav2_bt_navigator::BtNavigator',
-					# 	name='bt_navigator',
-					# 	parameters=[configured_params],
-					# 	remappings=remappings,
-					# ),
-					# ComposableNode(
-					# 	package='nav2_waypoint_follower',
-					# 	plugin='nav2_waypoint_follower::WaypointFollower',
-					# 	name='waypoint_follower',
-					# 	parameters=[configured_params],
-					# 	remappings=remappings,
-					# ),
-					# ComposableNode(
-					# 	package='nav2_velocity_smoother',
-					# 	plugin='nav2_velocity_smoother::VelocitySmoother',
-					# 	name='velocity_smoother',
-					# 	parameters=[configured_params],
-					# 	remappings=remappings
-					# 	+ [('cmd_vel', 'cmd_vel_nav')],
-					# ),
+					ComposableNode(
+						package='nav2_behaviors',
+						plugin='behavior_server::BehaviorServer',
+						name='behavior_server',
+						parameters=[configured_params],
+						remappings=remappings + [('cmd_vel', 'cmd_vel_nav')],
+					),
+					ComposableNode(
+						package='nav2_bt_navigator',
+						plugin='nav2_bt_navigator::BtNavigator',
+						name='bt_navigator',
+						parameters=[configured_params],
+						remappings=remappings,
+					),
+					ComposableNode(
+						package='nav2_waypoint_follower',
+						plugin='nav2_waypoint_follower::WaypointFollower',
+						name='waypoint_follower',
+						parameters=[configured_params],
+						remappings=remappings,
+					),
+					ComposableNode(
+						package='nav2_velocity_smoother',
+						plugin='nav2_velocity_smoother::VelocitySmoother',
+						name='velocity_smoother',
+						parameters=[configured_params],
+						remappings=remappings
+						+ [('cmd_vel', 'cmd_vel_nav')],
+					),
 					# ComposableNode(
 					# 	package='nav2_collision_monitor',
 					# 	plugin='nav2_collision_monitor::CollisionMonitor',
