@@ -16,4 +16,6 @@ source install/setup.bash
 
 # ros2 run szuflada_pkg slam_node 
 
-ros2 launch launch/szuflada_slam.py
+# ros2 launch launch/szuflada_slam.py
+
+ros2 launch orion_vi_bringup_pkg bringup_launch.py 

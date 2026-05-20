@@ -37,7 +37,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 ENV LANG=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8
+    LC_ALL=en_US.UTF-8 \
+    ROS_DISTRO=jazzy
 
 # RUN apt-get update && \
 #     apt-get install -y curl apt-transport-https && \
@@ -47,8 +48,14 @@ ENV LANG=en_US.UTF-8 \
 #     apt-get install ros-jazzy-ros-base
 
 RUN apt-get update && \
-    apt-get install -y software-properties-common curl apt-transport-https && \
+    apt-get install -y software-properties-common curl apt-transport-https git make cmake && \
     add-apt-repository universe
+
+RUN git clone https://github.com/realsenseai/librealsense.git &&\
+    cd librealsense &&\
+    mkdir build && cd build &&\
+    cmake .. &&\
+    cmake --build . 
 
 # Get latest ROS 2 apt source version and install it
 RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest \
@@ -57,9 +64,14 @@ RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-inf
     dpkg -i /tmp/ros2-apt-source.deb && \
     apt-get update && \
     apt-get install -y ros-jazzy-ros-base && \
-    rm -f /tmp/ros2-apt-source.deb && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y ros-$ROS_DISTRO-rtabmap-ros ros-$ROS_DISTRO-aruco-opencv ros-$ROS_DISTRO-navigation2 ros-$ROS_DISTRO-nav2-bringup 
+    # rm -f /tmp/ros2-apt-source.deb && \
+    # apt-get clean && \
+    # rm -rf /var/lib/apt/lists/*
+
+
+# RUN apt-get update && \
+#     apt-get install -y ros-$ROS_DISTRO-rtabmap-ros ros-$ROS_DISTRO-aruco-opencv ros-$ROS_DISTRO-navigation2 ros-$ROS_DISTRO-nav2-bringup
 
 # RUN source /opt/ros/jazzy/setup.bash
 LABEL name='orion'
