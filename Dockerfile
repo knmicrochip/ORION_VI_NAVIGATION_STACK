@@ -48,14 +48,21 @@ ENV LANG=en_US.UTF-8 \
 #     apt-get install ros-jazzy-ros-base
 
 RUN apt-get update && \
-    apt-get install -y software-properties-common curl apt-transport-https git make cmake && \
+    apt-get install -y software-properties-common curl apt-transport-https \
+    git make cmake libssl-dev libusb-1.0-0-dev \
+    libudev-dev pkg-config libgtk-3-dev  \
+    wget build-essential \
+    libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev at \
+    nvidia-cuda-toolkit &&\
     add-apt-repository universe
 
 RUN git clone https://github.com/realsenseai/librealsense.git &&\
     cd librealsense &&\
     mkdir build && cd build &&\
-    cmake .. &&\
-    cmake --build . 
+    cmake .. -DBUILD_WITH_CUDA=true &&\
+    cmake --build . &&\
+    make &&\
+    make install
 
 # Get latest ROS 2 apt source version and install it
 RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest \
@@ -64,7 +71,9 @@ RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-inf
     dpkg -i /tmp/ros2-apt-source.deb && \
     apt-get update && \
     apt-get install -y ros-jazzy-ros-base && \
-    apt-get install -y ros-$ROS_DISTRO-rtabmap-ros ros-$ROS_DISTRO-aruco-opencv ros-$ROS_DISTRO-navigation2 ros-$ROS_DISTRO-nav2-bringup 
+    apt-get install -y ros-$ROS_DISTRO-rtabmap-ros ros-$ROS_DISTRO-aruco-opencv \
+    ros-$ROS_DISTRO-navigation2 ros-$ROS_DISTRO-nav2-bringup \
+    ros-jazzy-realsense2-*
     # rm -f /tmp/ros2-apt-source.deb && \
     # apt-get clean && \
     # rm -rf /var/lib/apt/lists/*
@@ -87,3 +96,5 @@ RUN chmod +x /orion_ws/entrypoint.sh
 
 # Define the script that should be launched upon start of the container
 ENTRYPOINT ["/orion_ws/entrypoint.sh"]
+
+# see DOCKER.md for more information
