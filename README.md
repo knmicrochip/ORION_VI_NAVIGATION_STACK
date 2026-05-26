@@ -1,127 +1,120 @@
-# orion-vi-navigation-stack
-Navigation stack for orion VI rover
+# TODO
 
-# create a dev enivroment
+- [x] launchfile
+- [x] Dockerfile
+  - [x] Podstawowy Dockerfile
+  - [ ] Budowa paczki w Dockerfile (`colcon`)
+- [x] Graf/schemat nawigacji
+- [ ] Konwersja mapy 3D na mapę kosztów
+- [ ] Dobry SLAM to podstawa
+- [ ] Linter
+- [x] Wifi na szufladzie
+- [ ] ~~zamienić .e57 na jakiś normalny format~~
+- [ ] Nav2 i jego pluginy
+  - [x] bringup
+    - [ ] kontroler
+    - [ ] TFy
+    - [ ] behaviour tree
+- [ ] Gazebo
+  - [ ] TFy
+  - [ ] UDRF i SDF do symulacji 
+  - [x] filtry kalmana
+  - [ ] Odometria
+  - [ ] Kamery
+  - [ ] behavior tree / state machine
+- [ ] Rozbudowa apki do sterowania 
+  - [ ] Podgląd kamer
+- [ ] Spisać hasła do różnych rzeczy sieciowych 
+- [ ] Otworzyć ssh na rasberce
+  - [ ] Sprawdzić kolejkowanie
+- [ ] Node który zamienia odczyt z enkoderów na odometrię
+- [ ] Detekcja arucomarkerów
+  - [ ] Pre-definiowane kordynaty tych markerów
+- [ ] Empiricznie sprawdzić macierze do filtru kalmana
+- [ ] trzymadełko na kamerę
+- [ ] rviz config
+- [ ] switch detection in camera (openCV/YOLO)
+  - https://github.com/ros-perception/vision_msgs
+- [x] aruco/QR auto decode 
 
-### create dev container
-```
-distrobox create --image docker.io/library/ubuntu:noble --home ~/Distrobox/Orion --nvidia --name ros-developement-experience && distrobox enter ros-developement-experience
-```
-### add repositories
-```
-sudo apt install software-properties-common -y && sudo add-apt-repository universe -y
-```
+# Sekcja ROS2
 
-```
-sudo apt update && sudo apt install curl apt-transport-https -y
-export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
-curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb"
-sudo dpkg -i /tmp/ros2-apt-source.deb
-```
+- do rozważenia nav2 albo easymapping
+- w ros2 launch rtabmap_examples realsense_d435i_color.launch.py 
+wiadomość mapy topic /mapData
 
+# Sekcja Docker
+zbuduj paczkę:
 ```
-sudo apt update && sudo apt install ros-dev-tools ros-jazzy-desktop -y
+source install/setup.bash
+colcon build
 ```
-
+zbuduj dockera:
 ```
-echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
-source /opt/ros/jazzy/setup.bash
+docker build -f Dockerfile --tag orion
 ```
-
-```
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/packages.microsoft.gpg
-sudo sh -c 'echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-
-```
-
-```
-sudo add-apt-repository ppa:zhangsongcui3371/fastfetch -y 
-```
-
-### install VScode ROS2 and fastfetch
-
-```
-sudo apt update && sudo apt install code fastfetch ros-dev-tools ros-jazzy-desktop -y
-
-```
+jeśli podman-remote jest używane to zamienić `docker` na `podmna-remote` (wskazówka: Użyj `alias` w `.bashrc`)
 
 
+uruchom dockera:
 ```
-echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
-source /opt/ros/jazzy/setup.bash
-```
-
-```
-distrobox-export --app code
-```
-
-```
-git clone https://github.com/knmicrochip/orion-vi-navigation-stack.git
-```
-
-## Install dependencies 
-
-install librealsense2
-https://github.com/realsenseai/librealsense/blob/master/doc/distribution_linux.md
-
-```
-curl -sSf https://librealsense.realsenseai.com/Debian/librealsenseai.asc | \
-gpg --dearmor | sudo tee /etc/apt/keyrings/librealsenseai.gpg > /dev/null
+docker run --rm -it  orion
 ```
 
-```
-echo "deb [signed-by=/etc/apt/keyrings/librealsenseai.gpg] https://librealsense.realsenseai.com/Debian/apt-repo `lsb_release -cs` main" | \
-sudo tee /etc/apt/sources.list.d/librealsense.list
-sudo apt-get update
-```
+# Sekcja organizacja - skróty itp
 
-```
-sudo apt update && sudo apt install librealsense2-utils
-```
-
-bypass errors: (I have no idea what it's about)
-```
-sudo dpkg --configure librealsense2-udev-rules
-```
-
-```
-sudo apt update && sudo apt install ros-jazzy-realsense2-* -y
-```
-
-```
-sudo apt install ros-$ROS_DISTRO-rtabmap-ros ros-$ROS_DISTRO-aruco-opencv
-```
+`sudo apt install ros-$ROS_DISTRO-image-view`
+`ros2 run image_view image_view --ros-args -r image:=<image topic>`
 
 
-install ros wrapper for realsense
-https://github.com/realsenseai/realsense-ros?tab=readme-ov-file#installation-on-ubuntu
+## ROS2
+- nazwa paczki {nazwa}_pkg
+- nazwa węzła {nazwa}_node
 
-install rtab-map 
-https://deepwiki.com/introlab/rtabmap_ros/2-installation-and-setup
+## SDF
+
+https://github.com/sdformat-editor/sdformat-editor
+
+# PLAN na ERC
+
+### Przed
+
+ - konwersja mapy .e57 do jakiejś używalnej
+
+### Dzień przed
+
+ ~~- test nawigacji na mapie od organizatorów~~
+  rtab-map nie obsługuje importu
+    - jeśli nie działa to robimy własną mapę
 
 
+# Sieć
 
----
-# Other stuff
+esp szuflada ip: ping 192.168.1.50 
 
-```
-example use first node: ros2 run szuflada slam
-example realsense map: ros2 launch rtabmap_examples realsense_d435i_color.launch.py 
-```
-
-### Gazebo
-
-https://gazebosim.org/docs/harmonic/install_ubuntu/
+rasberrka ip:  ping 192.168.1.1
+użytkownik: `test1`
+hasło: `123`
 
 
-### Dodatkowe fajne programy
+router stół ip: ping 192.168.1.101
 
-pokazuje TFy:
+router szuflada ip: ping 192.168.1.102
 
-`sudo apt install ros-$ROS_DISTRO-rqt-tf-tree`
+ustawić manualnie ip na laptopie podłączonym do switcha na stole.
 
-`ros2 run rqt_tf_tree`
+# Opis
 
-pokazuje kamerę
+### Software:
 
-`ros2 run rqt_image_view rqt_image_view`
+The rover will be using a ROS 2 based stack for localization, navigation and control. For SLAM we will be using Realsense cameras with RTAB-Map library. That data will be converted into costmap that is usable by NAV2 for path planning. Custom controller will issue commands over MQTT to execute that path. Gazebo simulator will be used to validate used algorithms. 
+
+Low-level electronics are build on ESP32 that communicates to ODrive via CAN bus and receives MQTT commands through ethernet via Mosquitto server run on Raspberry Pi. Traffic is directed to Jetson Orin NX that hosts the ROS stack, or to remote command center that we will host our laptops running variety of environments. 
+
+Command centre will have one universal app that will have all required operating modes in various tabs. It will have support for joystick or game pad input for direct rover control. It will communicate via direct MQTT or /cmd_vel ROS topic. It will also have rendering of telemetry required for successful operation. 
+
+We are also looking into adding YOLO based object detection for detecting switches and demo mode operated via steam deck, where operator can walk behind the rover without needing whole operation centre. 
+
+### Oprogramowanie:
+
+Łazik będzie używał ROS™ 2 do lokalizacji, nawigacji i kontrolowania napędem. Aby uzyskać SLAM użyjemy biblioteki RTAB-Map z kamerami Realsense™. Uzyskane dane zostaną przekonwertowane w mapę kosztów która będzie użyta do planowania trasy. Napiszemy własny kontroler który będzie wysyłał komendy po MQTT do napędu aby dostać się do celu. Użyjemy symulatora Gazebo do walidacji naszych algorytmów.
