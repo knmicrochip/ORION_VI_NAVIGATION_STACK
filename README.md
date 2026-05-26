@@ -1,3 +1,23 @@
+# Opis
+
+This is a repository that hosts the navigation stack for Orion VI Rover. Other software are in diffrent repositories, under the github organization or in individual repositories.
+
+### Software:
+
+The rover will be using a ROS 2 based stack for localization, navigation and control. For SLAM we will be using Realsense cameras with RTAB-Map library. That data will be converted into costmap that is usable by NAV2 for path planning. Custom controller will issue commands over MQTT to execute that path. Gazebo simulator will be used to validate used algorithms. 
+
+Low-level electronics are build on ESP32 that communicates to ODrive via CAN bus and receives MQTT commands through ethernet via Mosquitto server run on Raspberry Pi. Traffic is directed to Jetson Orin NX that hosts the ROS stack, or to remote command center that we will host our laptops running variety of environments. 
+
+Command centre will have one universal app that will have all required operating modes in various tabs. It will have support for joystick or game pad input for direct rover control. It will communicate via direct MQTT or /cmd_vel ROS topic. It will also have rendering of telemetry required for successful operation. 
+
+We are also looking into adding YOLO based object detection for detecting switches and demo mode operated via steam deck, where operator can walk behind the rover without needing whole operation centre. 
+
+### Oprogramowanie:
+
+Łazik będzie używał ROS™ 2 do lokalizacji, nawigacji i kontrolowania napędem. Aby uzyskać SLAM użyjemy biblioteki RTAB-Map z kamerami Realsense™. Uzyskane dane zostaną przekonwertowane w mapę kosztów która będzie użyta do planowania trasy. Napiszemy własny kontroler który będzie wysyłał komendy po MQTT do napędu aby dostać się do celu. Użyjemy symulatora Gazebo do walidacji naszych algorytmów.
+
+
+
 # TODO
 
 - [x] launchfile
@@ -6,14 +26,14 @@
   - [ ] Budowa paczki w Dockerfile (`colcon`)
 - [x] Graf/schemat nawigacji
 - [ ] Konwersja mapy 3D na mapę kosztów
-- [ ] Dobry SLAM to podstawa
+- [x] Dobry SLAM to podstawa
 - [ ] Linter
 - [x] Wifi na szufladzie
 - [ ] ~~zamienić .e57 na jakiś normalny format~~
-- [ ] Nav2 i jego pluginy
+- [x] Nav2 i jego pluginy
   - [x] bringup
     - [ ] kontroler
-    - [ ] TFy
+    - [x] TFy
     - [ ] behaviour tree
 - [ ] Gazebo
   - [ ] TFy
@@ -28,52 +48,66 @@
 - [ ] Otworzyć ssh na rasberce
   - [ ] Sprawdzić kolejkowanie
 - [ ] Node który zamienia odczyt z enkoderów na odometrię
-- [ ] Detekcja arucomarkerów
-  - [ ] Pre-definiowane kordynaty tych markerów
+- [x] Detekcja arucomarkerów
+  - [x] Pre-definiowane kordynaty tych markerów
 - [ ] Empiricznie sprawdzić macierze do filtru kalmana
 - [ ] trzymadełko na kamerę
-- [ ] rviz config
+- [x] rviz config
 - [ ] switch detection in camera (openCV/YOLO)
   - https://github.com/ros-perception/vision_msgs
 - [x] aruco/QR auto decode 
+- [x] zainstalować system na steam decku
+- [x] ogarnąć sieć aby można było sterować steam deckiem poprzez wifi
+- [ ] test nvidia jetson
+- [ ] fix custom ros-controller
+- [x] fix realsense regression
+- [x] fix steamdeck input with guID
+- [ ] set up foxglove
+
+---
+
+Must have:
+ - [ ] odpalenie dockera na jetsonie
+ - [ ] połączyć ros-control w dockera
+ - [ ] End to End testing of comms
+ - [ ] custom local planer/controler
+ - [ ] jak ma się mapowanie do lokalizacji
+ - [ ] dostrajanie parametrów
+ - [ ] A way to specify the goal cordinates
+ 
+Will make the 10x dev:
+ - [ ] gazebo sim
+ - [ ] ros bag
+ 
+Good to have:
+ - [ ] Documentation to show to people
+
+
+
 
 # Sekcja ROS2
 
-- do rozważenia nav2 albo easymapping
-- w ros2 launch rtabmap_examples realsense_d435i_color.launch.py 
-wiadomość mapy topic /mapData
+TODO
+
+![](PLAN.excalidraw.png)
 
 # Sekcja Docker
-zbuduj paczkę:
-```
-source install/setup.bash
-colcon build
-```
-zbuduj dockera:
-```
-docker build -f Dockerfile --tag orion
-```
-jeśli podman-remote jest używane to zamienić `docker` na `podmna-remote` (wskazówka: Użyj `alias` w `.bashrc`)
 
-
-uruchom dockera:
-```
-docker run --rm -it  orion
-```
+patrz [DOCKER.md](./DOCKER.md)
 
 # Sekcja organizacja - skróty itp
 
-`sudo apt install ros-$ROS_DISTRO-image-view`
-`ros2 run image_view image_view --ros-args -r image:=<image topic>`
+Aby stworzyć środowisko developerskie patrz na [DEVELOPMENT.md](./DEVELOPMENT.md)
 
 
 ## ROS2
 - nazwa paczki {nazwa}_pkg
 - nazwa węzła {nazwa}_node
+- nazwa uruchamiacza {nazwa}_launch.py
 
-## SDF
+## Xarco, Gazebo, Symulacja
 
-https://github.com/sdformat-editor/sdformat-editor
+TODO
 
 # PLAN na ERC
 
@@ -90,6 +124,10 @@ https://github.com/sdformat-editor/sdformat-editor
 
 # Sieć
 
+teleoperacja przez steamdecka
+ssid: UBNT
+hasło: 123456789
+
 esp szuflada ip: ping 192.168.1.50 
 
 rasberrka ip:  ping 192.168.1.1
@@ -103,18 +141,8 @@ router szuflada ip: ping 192.168.1.102
 
 ustawić manualnie ip na laptopie podłączonym do switcha na stole.
 
-# Opis
+# Topiki 
 
-### Software:
+TODO
 
-The rover will be using a ROS 2 based stack for localization, navigation and control. For SLAM we will be using Realsense cameras with RTAB-Map library. That data will be converted into costmap that is usable by NAV2 for path planning. Custom controller will issue commands over MQTT to execute that path. Gazebo simulator will be used to validate used algorithms. 
-
-Low-level electronics are build on ESP32 that communicates to ODrive via CAN bus and receives MQTT commands through ethernet via Mosquitto server run on Raspberry Pi. Traffic is directed to Jetson Orin NX that hosts the ROS stack, or to remote command center that we will host our laptops running variety of environments. 
-
-Command centre will have one universal app that will have all required operating modes in various tabs. It will have support for joystick or game pad input for direct rover control. It will communicate via direct MQTT or /cmd_vel ROS topic. It will also have rendering of telemetry required for successful operation. 
-
-We are also looking into adding YOLO based object detection for detecting switches and demo mode operated via steam deck, where operator can walk behind the rover without needing whole operation centre. 
-
-### Oprogramowanie:
-
-Łazik będzie używał ROS™ 2 do lokalizacji, nawigacji i kontrolowania napędem. Aby uzyskać SLAM użyjemy biblioteki RTAB-Map z kamerami Realsense™. Uzyskane dane zostaną przekonwertowane w mapę kosztów która będzie użyta do planowania trasy. Napiszemy własny kontroler który będzie wysyłał komendy po MQTT do napędu aby dostać się do celu. Użyjemy symulatora Gazebo do walidacji naszych algorytmów.
+działają ale nie są dobrze udokumentowane, szukaj w innych repozytoriach

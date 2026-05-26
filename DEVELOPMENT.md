@@ -116,12 +116,25 @@ https://gazebosim.org/docs/harmonic/install_ubuntu/
 
 ### Dodatkowe fajne programy
 
-pokazuje TFy:
+`sudo apt install ros-$ROS_DISTRO-rqt-tf-tree ros-$ROS_DISTRO-rqt-image-view ros-$ROS_DISTRO-rqt-graph`
 
-`sudo apt install ros-$ROS_DISTRO-rqt-tf-tree`
+pokazuje nody i topiki
+
+`ros2 run rqt_graph rqt_graph`
+
+pokazuje TFy:
 
 `ros2 run rqt_tf_tree`
 
 pokazuje kamerę
 
 `ros2 run rqt_image_view rqt_image_view`
+
+Dodaj aliasy
+
+```
+echo 'alias rqt_graph="ros2 run rqt_graph rqt_graph"' >> ~/.bashrc
+echo 'alias rqt_tf_tree="ros2 run rqt_tf_tree rqt_tf_tree"' >> ~/.bashrc
+echo 'alias rqt_image_view="ros2 run rqt_image_view rqt_image_view"' >> ~/.bashrc
+source ~/.bashrc
+```
