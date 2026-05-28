@@ -1,7 +1,7 @@
 
 # Containers 
 
-I am using podman-remote in my developement machine, this is the way I set up with docker file. To build you need to install some package (I don't remember)
+I am using podman in my developement machine, this is the way I set up with docker file. To build you need to install some package (I don't remember)
 
 `docker` might behave differently
 
@@ -9,18 +9,19 @@ This container will run the navigation bringup
 
 
 ```
-cd ~/orion-vi-navigation-stack
+git clone https://github.com/knmicrochip/ORION_VI_NAVIGATION_STACK
+cd ~/ORION_VI_NAVIGATION_STACK
 ```
 
 
 build:
 ```
-podman-remote build -f new.Dockerfile -t orion-bringup .
+podman build -f new.Dockerfile -t orion-bringup .
 ```
 
 run for testing: 
 ```
-podman-remote run --rm --name ORION-BRINGUP --privileged -it \
+podman run --rm --name ORION-BRINGUP --privileged -it \
  --network host --ipc host --replace --group-add keep-groups localhost/orion-bringup:latest
 ```
 
