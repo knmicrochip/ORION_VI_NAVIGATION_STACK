@@ -85,7 +85,7 @@ LABEL name='orion'
 COPY . ${WS_DIR}
 
 # building the ROS2 package inside the docker 
-RUN colcon build
+RUN colcon build --packages-select orion_vi_bringup_pkg
 
 ARG DEBIAN_FRONTEND=dialog
 
