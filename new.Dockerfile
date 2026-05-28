@@ -53,11 +53,11 @@ RUN git clone https://github.com/realsenseai/librealsense.git &&\
     mkdir build && cd build &&\
     cmake .. \
         #  -DBUILD_WITH_CUDA=true \
+        #  -DBUILD_CUDA_HOST_COMPILER=/usr/bin/g++-12 \
          -DFORCE_RSUSB_BACKEND=ON \
          -DCMAKE_BUILD_TYPE=release \
          -DBUILD_EXAMPLES=false \
-         -DBUILD_GRAPHICAL_EXAMPLES=false \
-         -DBUILD_CUDA_HOST_COMPILER=/usr/bin/g++-12 &&\
+         -DBUILD_GRAPHICAL_EXAMPLES=false &&\
     cmake --build . --parallel $(nproc) &&\
     make &&\
     make install
