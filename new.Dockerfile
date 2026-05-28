@@ -34,7 +34,8 @@ RUN apt-get update && \
     git make cmake libssl-dev libusb-1.0-0-dev \
     libudev-dev pkg-config libgtk-3-dev  \
     wget build-essential \
-    libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev at nvidia-cuda-toolkit
+    libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev at nvidia-cuda-toolkit \
+    gcc-12 g++-12
 
 # RUN wget https://github.com/realsenseai/librealsense/archive/refs/tags/v2.55.1.tar.gz && tar -xf v2.55.1.tar.gz  && rm -fr v2.55.1.tar.gz &&\
 #     mv librealsense-2.55.1/ librealsense &&\
@@ -47,7 +48,8 @@ RUN git clone https://github.com/realsenseai/librealsense.git &&\
          -DFORCE_RSUSB_BACKEND=ON \
          -DCMAKE_BUILD_TYPE=release \
          -DBUILD_EXAMPLES=false \
-         -DBUILD_GRAPHICAL_EXAMPLES=false &&\
+         -DBUILD_GRAPHICAL_EXAMPLES=false \
+         -DBUILD_CUDA_HOST_COMPILER=/usr/bin/g++-12 &&\
     cmake --build . --parallel $(nproc) &&\
     make &&\
     make install
