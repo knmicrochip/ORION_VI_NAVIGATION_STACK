@@ -10,8 +10,10 @@ RUN apt-get update && \
     wget build-essential \
     libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev at nvidia-cuda-toolkit
 
-RUN wget https://github.com/realsenseai/librealsense/archive/refs/tags/v2.55.1.tar.gz && tar -xf v2.55.1.tar.gz  && rm -fr v2.55.1.tar.gz &&\
-    mv librealsense-2.55.1/ librealsense &&\
+# RUN wget https://github.com/realsenseai/librealsense/archive/refs/tags/v2.55.1.tar.gz && tar -xf v2.55.1.tar.gz  && rm -fr v2.55.1.tar.gz &&\
+#     mv librealsense-2.55.1/ librealsense &&\
+
+RUN git clone https://github.com/realsenseai/librealsense.git &&\
     cd librealsense &&\
     mkdir build && cd build &&\
     cmake .. -DBUILD_WITH_CUDA=true &&\
