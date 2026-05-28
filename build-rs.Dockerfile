@@ -16,7 +16,12 @@ RUN apt-get update && \
 RUN git clone https://github.com/realsenseai/librealsense.git &&\
     cd librealsense &&\
     mkdir build && cd build &&\
-    cmake .. -DBUILD_WITH_CUDA=true &&\
+    cmake .. 
+         -DBUILD_WITH_CUDA=true \
+         -DFORCE_RSUSB_BACKEND=ON \
+         -DCMAKE_BUILD_TYPE=release \
+         -DBUILD_EXAMPLES=false \
+         -DBUILD_GRAPHICAL_EXAMPLES=false &&\
     cmake --build . &&\
     make &&\
     make install
