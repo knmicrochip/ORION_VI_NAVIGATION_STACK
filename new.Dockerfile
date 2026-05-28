@@ -10,6 +10,10 @@ RUN apt-get update && apt-get install -y \
     apt-transport-https \
     && rm -rf /var/lib/apt/lists/*
 
+# ===========================
+# INSTALL REALSENSE FROM REPO
+# ===========================
+
 # Create keyrings directory
 # RUN mkdir -p /etc/apt/keyrings
 
@@ -29,6 +33,10 @@ RUN apt-get update && apt-get install -y \
 #     librealsense2-utils \
 #     && rm -rf /var/lib/apt/lists/*
 
+# ===========================
+# INSTALL REALSENSE FROM SOURCE
+# ===========================
+
 RUN apt-get update && \
     apt-get install -y software-properties-common curl apt-transport-https \
     git make cmake libssl-dev libusb-1.0-0-dev \
@@ -44,7 +52,7 @@ RUN git clone https://github.com/realsenseai/librealsense.git &&\
     cd librealsense &&\
     mkdir build && cd build &&\
     cmake .. \
-         -DBUILD_WITH_CUDA=true \
+        #  -DBUILD_WITH_CUDA=true \
          -DFORCE_RSUSB_BACKEND=ON \
          -DCMAKE_BUILD_TYPE=release \
          -DBUILD_EXAMPLES=false \
@@ -53,6 +61,10 @@ RUN git clone https://github.com/realsenseai/librealsense.git &&\
     cmake --build . --parallel $(nproc) &&\
     make &&\
     make install
+
+# ===========================
+# INSTALL ROS PACKAGES
+# ===========================
 
 # install ros packages
 RUN apt-get update && apt-get install -y \
