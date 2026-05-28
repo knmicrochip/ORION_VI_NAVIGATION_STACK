@@ -7,11 +7,12 @@ I am using podman-remote in my developement machine, this is the way I set up wi
 
 This container will run the navigation bringup
 
-compile:
+
 ```
 cd ~/orion-vi-navigation-stack
-colcon build
 ```
+
+
 build:
 ```
 podman-remote build -f new.Dockerfile -t orion-bringup .
@@ -20,13 +21,19 @@ podman-remote build -f new.Dockerfile -t orion-bringup .
 run for testing: 
 ```
 podman-remote run --rm --name ORION-BRINGUP --privileged -it \
- --network host --ipc host --replace localhost/orion-bringup:latest
+ --network host --ipc host --replace --group-add keep-groups localhost/orion-bringup:latest
 ```
 
 for deployment we need persistent container that won't vanish into the aether
 
 
+## RealSense from source container:
 
+```
+podman build -f build-rs.Dockerfile -t realsense-source .
+podman run --rm --name REALSENSE-SOURCE --privileged -it \
+ --network host --ipc host --replace --group-add keep-groups localhost/realsense-source:latest
+```
 
 
 ---
@@ -34,6 +41,7 @@ for deployment we need persistent container that won't vanish into the aether
 
 `--replace --platform linux/arm64`
 `--entrypoint /bin/bash` <- add this for debugging inside the container
+`--group-add keep-groups`
 
 ```
 podman-remote run --rm --name ORION_BIN \
