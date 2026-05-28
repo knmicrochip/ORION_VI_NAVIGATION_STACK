@@ -47,6 +47,9 @@ LABEL name='orion'
 # copy the files, probably could be slimmed down
 COPY . ${WS_DIR}
 
+# building the ROS2 package inside the docker 
+RUN colcon build
+
 ARG DEBIAN_FRONTEND=dialog
 
 CMD ["/bin/bash", "-c", "source ${WS_DIR}/install/setup.bash && ros2 launch orion_vi_bringup_pkg bringup_launch.py" ]
