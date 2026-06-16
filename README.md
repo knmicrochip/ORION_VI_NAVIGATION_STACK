@@ -68,6 +68,7 @@ We are also looking into adding YOLO based object detection for detecting switch
 
 Must have:
  - [ ] odpalenie dockera na jetsonie
+ - [ ] napisać własny ros-control
  - [ ] połączyć ros-control w dockera
  - [ ] End to End testing of comms
  - [ ] custom local planer/controler
@@ -82,7 +83,13 @@ Will make the 10x dev:
 Good to have:
  - [ ] Documentation to show to people
 
+PRs to make:
+ - [ ] RtabMap aruco launch file
+ - [ ] RtabMap librealsense regression
 
+Next Year improvements:
+  -> DDS on ESP32
+  -> nixOS on jetson, NIX Packages and devenv.sh
 
 
 # Sekcja ROS2
