@@ -7,6 +7,7 @@ Navigation stack for orion VI rover
 ```
 distrobox create --image docker.io/library/ubuntu:noble --home ~/Distrobox/Orion --nvidia --name ros-developement-experience && distrobox enter ros-developement-experience
 ```
+
 ### add repositories
 ```
 sudo apt install software-properties-common -y && sudo add-apt-repository universe -y
@@ -76,7 +77,7 @@ sudo apt-get update
 ```
 
 ```
-sudo apt update && sudo apt install librealsense2-utils
+sudo apt update && sudo apt install librealsense2-utils -y
 ```
 
 bypass errors: (I have no idea what it's about)
@@ -85,12 +86,14 @@ sudo dpkg --configure librealsense2-udev-rules
 ```
 
 ```
-sudo apt update && sudo apt install ros-jazzy-realsense2-* -y
+sudo apt update && sudo apt install -y \
+    ros-$ROS_DISTRO-rtabmap-ros \
+    ros-$ROS_DISTRO-aruco-opencv \
+    ros-$ROS_DISTRO-navigation2 \
+    ros-$ROS_DISTRO-nav2-bringup \
+    ros-$ROS_DISTRO-realsense2-* 
 ```
 
-```
-sudo apt install ros-$ROS_DISTRO-rtabmap-ros ros-$ROS_DISTRO-aruco-opencv
-```
 
 
 install ros wrapper for realsense
@@ -137,4 +140,56 @@ echo 'alias rqt_graph="ros2 run rqt_graph rqt_graph"' >> ~/.bashrc
 echo 'alias rqt_tf_tree="ros2 run rqt_tf_tree rqt_tf_tree"' >> ~/.bashrc
 echo 'alias rqt_image_view="ros2 run rqt_image_view rqt_image_view"' >> ~/.bashrc
 source ~/.bashrc
+```
+
+### alternative install for jetson (sudo apt update returns an error):
+
+patch kernel before making distrobox
+
+https://github.com/jetsonhacks/jetson-orin-librealsense
+
+
+```
+distrobox create --image docker.io/library/ros:jazzy-ros-base --home ~/Distrobox/Orion --nvidia --name ros-developement-experience && distrobox enter ros-developement-experience
+```
+
+```
+sudo apt update && sudo apt install ros-dev-tools ros-jazzy-desktop -y
+```
+
+```
+echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+echo 'export PS1="\[\e[1;36m\]orion@ros-developement-experience\[\e[0m\]:\[\e[1;33m\]\w\[\e[0m\]\$ "' >> ~/.bashrc
+
+source /opt/ros/jazzy/setup.bash
+```
+```
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/packages.microsoft.gpg
+sudo sh -c 'echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+```
+```
+sudo apt update; sudo apt install code ros-dev-tools ros-jazzy-desktop -y
+```
+
+```
+curl -sSf https://librealsense.realsenseai.com/Debian/librealsenseai.asc | \
+gpg --dearmor | sudo tee /etc/apt/keyrings/librealsenseai.gpg > /dev/null
+```
+
+```
+echo "deb [signed-by=/etc/apt/keyrings/librealsenseai.gpg] https://librealsense.realsenseai.com/Debian/apt-repo `lsb_release -cs` main" | \
+sudo tee /etc/apt/sources.list.d/librealsense.list
+sudo apt-get update
+```
+
+```
+sudo apt install librealsense2-utils -y
+```
+```
+sudo apt install -y \
+    ros-$ROS_DISTRO-rtabmap-ros \
+    ros-$ROS_DISTRO-aruco-opencv \
+    ros-$ROS_DISTRO-navigation2 \
+    ros-$ROS_DISTRO-nav2-bringup \
+    ros-$ROS_DISTRO-realsense2-* 
 ```
