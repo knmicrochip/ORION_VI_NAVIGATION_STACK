@@ -28,9 +28,22 @@ allow_anonymous true
 ```
 Zrestartuj żeby zobaczyć czy działa
 (test czy dziala mosquitto po restarcie)
-'''
+```
 systemctl status mosquitto
-'''
+```
+
+5. Sieć - najlepiej wyłączyć wifi - może coś się odwalać (przez gui czy komende np.)
+```
+sudo rfkill block wifi
+```
+!! Ważne - ustawić STAŁY adres ip na połączeniu kablowym - najlpeij tak jak używamy 192.168.1.1 (komenda lub gui)
+```
+sudo nmcli connection modify  "NAZWA POLACZENIA KABLOWEGO" ipv4.address 192.168.1.1/24 ipv4.gateway 192.168.1.254 ipv4.method manual
+```
+Sprawdzić czy sie ustawilo poprawnnie np. ifconfig 
+
+Możliwe że nie zadziałą komenda przy gui spytac sie czata jak ktos nie wie
+
 
 
 
