@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <world name="mars_yard">
+
+    <!-- Simple physics settings -->
+    <physics name="default_physics" type="ode">
+      <!-- coarser physics settings for faster simulation -->
+      <max_step_size>0.01</max_step_size>
+      <real_time_update_rate>100</real_time_update_rate>
+      <max_contacts>20</max_contacts>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Ambient / background -->
+    <scene>
+      <!-- disable shadows to reduce rendering cost -->
+      <shadows>false</shadows>
+    </scene>
+
+    <!-- Lightweight textured ground: use a 2-triangle quad for visual, keep collision as a simple plane -->
+    <model name="erc_ground">
+      <pose>-1 0 -1.4 1.57079632679 0 0</pose>
+      <static>true</static>
+      <link name="ground_link">
+        <visual name="ground_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>file://./ERC_Groundv4.glb</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="ground_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>file://./ERC_Groundv5_small.glb</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Spawn the rover model (SDF file) -->
+    <include>
+      <uri>file://./rover_model.urdf</uri>
+      <name>rover</name>
+    </include>
+
+    
+    <!-- Light -->    
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <intensity> 3.0 </intensity>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.5 -1</direction>
+    </light>
+
+  </world>
+</sdf>

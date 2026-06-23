@@ -1,0 +1,378 @@
+<?xml version="1.0"?>
+<robot name="orionVI" xmlns:xacro="http://ros.org/wiki/xacro" author="Aleksandra Grzybek">
+
+  <!-- Converted from rover_model.sdf -->
+
+  <!-- Properties -->
+  <xacro:property name="wheel_radius" value="0.21"/>
+  <xacro:property name="wheel_length" value="0.198"/>
+  <!-- Mass and geometry parameters -->
+  <xacro:property name="chassis_mass" value="20.0"/>
+  <xacro:property name="subchassis_mass" value="6.0"/>
+  <xacro:property name="wheel_mass" value="7.0"/>
+  <xacro:property name="suspension_diff_mass" value="0.001"/>
+  <xacro:property name="wheel_center_z" value="0.213"/>
+  <!-- Dimensions split into components for inertia calculation -->
+  <xacro:property name="chassis_x" value="1.055"/>
+  <xacro:property name="chassis_y" value="0.65"/>
+  <xacro:property name="chassis_z" value="0.24"/>
+  <xacro:property name="subchassis_x" value="1.0"/>
+  <xacro:property name="subchassis_y" value="0.162"/>
+  <xacro:property name="subchassis_z" value="0.06"/>
+  <!-- Inertia parameters (defaults from original SDF) -->
+  <!-- Automatic inertia calculations -->
+  <!-- temporarily use numeric literals for chassis inertia to avoid xacro eval issue -->
+  <xacro:property name="chassis_ixx" value="0.41791666666666677"/>
+  <xacro:property name="chassis_iyy" value="1.6560416666666666"/>
+  <xacro:property name="chassis_izz" value="1.4670833333333334"/>
+  <xacro:property name="subchassis_ixx" value="0.0036"/>
+  <xacro:property name="subchassis_iyy" value="0.3546"/>
+  <xacro:property name="subchassis_izz" value="0.3546"/>
+  <!-- Wheel: cylinder with axis along Y -> iyy = 1/2 m r^2; ixx=izz = 1/12 m (3 r^2 + h^2) -->
+  <xacro:property name="wheel_iyy" value="0.0929915"/>
+  <xacro:property name="wheel_ixx" value="0.0619943333333"/>
+  <xacro:property name="wheel_izz" value="${wheel_ixx}"/>
+  <!-- Suspension diff: approximate as small cube of size eps -->
+  <xacro:property name="suspdiff_dim" value="0.01"/>
+  <xacro:property name="suspdiff_ixx" value="8.33333333333e-07"/>
+  <xacro:property name="suspdiff_iyy" value="${suspdiff_ixx}"/>
+  <xacro:property name="suspdiff_izz" value="${suspdiff_ixx}"/>
+  <!-- Frame/subchassis/wheel spacing properties -->
+  <xacro:property name="chassis_size" value="${chassis_x} ${chassis_y} ${chassis_z}"/>
+  <xacro:property name="subchassis_size" value="${subchassis_x} ${subchassis_y} ${subchassis_z}"/>
+  <xacro:property name="wheel_spacing_x" value="0.9"/>
+  <xacro:property name="wheel_spacing_y" value="0.86"/>
+  <xacro:property name="wheel_subchassis_gap" value="0.02"/>
+  <!-- chassis origin height: set 0.197 m above wheel center -->
+  <xacro:property name="chassis_origin_z" value="$(eval ${wheel_center_z} + 0.197)"/>
+  <!-- subchassis origins: align tops with chassis top (subchassis top tangent to chassis top) -->
+  <xacro:property name="subchassis_origin_z" value="$(eval ${wheel_center_z} + 0.197 + ${chassis_z}/2 - ${subchassis_z}/2)"/>
+  <xacro:property name="left_subchassis_y" value="$(eval ${chassis_y}/2 + 0.01 + ${subchassis_y}/2)"/>
+  <xacro:property name="right_subchassis_y" value="$(eval -${chassis_y}/2 - 0.01 - ${subchassis_y}/2)"/>
+  <!-- turntable properties -->
+  <xacro:property name="turntable_height" value="0.10"/>
+  <xacro:property name="turntable_radius" value="$(eval ${subchassis_y}/2)"/>
+  <xacro:property name="turntable_mass" value="1.0"/>
+
+  <!-- CHASSIS -->
+  <!-- Materials -->
+  <material name="wheel_mat">
+    <color rgba="0.1490196 0.1490196 0.1490196 1.0"/>
+  </material>
+  <material name="subchassis_mat">
+    <color rgba="0.3176471 0.3176471 0.3176471 1.0"/>
+  </material>
+  <material name="chassis_mat">
+    <color rgba="0.6431373 0.6431373 0.6431373 1.0"/>
+  </material>
+
+  <link name="chassis">
+    <inertial>
+      <origin xyz="0 0 ${chassis_origin_z}" rpy="0 0 0"/>
+      <mass value="${chassis_mass}"/>
+      <inertia ixx="${chassis_ixx}" ixy="0" ixz="0" iyy="${chassis_iyy}" iyz="0" izz="${chassis_izz}"/>
+    </inertial>
+    <visual name="body_visual">
+      <material name="chassis_mat"/>
+      <origin xyz="0 0 ${chassis_origin_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_x} ${chassis_y} ${chassis_z}"/>
+      </geometry>
+    </visual>
+    <collision name="body_collision">
+      <origin xyz="0 0 ${chassis_origin_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_x} ${chassis_y} ${chassis_z}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- LEFT SUBCHASSIS -->
+  <link name="left_subchassis">
+    <inertial>
+      <origin xyz="0 ${left_subchassis_y} ${subchassis_origin_z}" rpy="0 0 0"/>
+      <mass value="${subchassis_mass}"/>
+      <inertia ixx="${subchassis_ixx}" ixy="0" ixz="0" iyy="${subchassis_iyy}" iyz="0" izz="${subchassis_izz}"/>
+    </inertial>
+    <visual name="left_rail_visual">
+      <material name="subchassis_mat"/>
+      <origin xyz="0 ${left_subchassis_y} ${subchassis_origin_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${subchassis_size}"/>
+      </geometry>
+    </visual>
+    <collision name="left_rail_collision">
+      <origin xyz="0 ${left_subchassis_y} ${subchassis_origin_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${subchassis_size}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- RIGHT SUBCHASSIS -->
+  <link name="right_subchassis">
+    <inertial>
+      <origin xyz="0 ${right_subchassis_y} ${subchassis_origin_z}" rpy="0 0 0"/>
+      <mass value="${subchassis_mass}"/>
+      <inertia ixx="${subchassis_ixx}" ixy="0" ixz="0" iyy="${subchassis_iyy}" iyz="0" izz="${subchassis_izz}"/>
+    </inertial>
+    <visual name="right_rail_visual">
+      <material name="subchassis_mat"/>
+      <origin xyz="0 ${right_subchassis_y} ${subchassis_origin_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${subchassis_size}"/>
+      </geometry>
+    </visual>
+    <collision name="right_rail_collision">
+      <origin xyz="0 ${right_subchassis_y} ${subchassis_origin_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${subchassis_size}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- VIRTUAL SUSPENSION DIFF -->
+  <link name="suspension_diff">
+    <inertial>
+      <mass value="${suspension_diff_mass}"/>
+      <inertia ixx="${suspdiff_ixx}" ixy="0" ixz="0" iyy="${suspdiff_iyy}" iyz="0" izz="${suspdiff_izz}"/>
+    </inertial>
+  </link>
+
+  <!-- WHEELS -->
+  <link name="left_front_wheel">
+    <inertial>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="0.062" ixy="0" ixz="0" iyy="0.093" iyz="0" izz="0.062"/>
+    </inertial>
+    <visual>
+      <material name="wheel_mat"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="left_rear_wheel">
+    <inertial>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="0.062" ixy="0" ixz="0" iyy="0.093" iyz="0" izz="0.062"/>
+    </inertial>
+    <visual>
+      <material name="wheel_mat"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="right_front_wheel">
+    <inertial>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="0.062" ixy="0" ixz="0" iyy="0.093" iyz="0" izz="0.062"/>
+    </inertial>
+    <visual>
+      <material name="wheel_mat"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="right_rear_wheel">
+    <inertial>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="0.062" ixy="0" ixz="0" iyy="0.093" iyz="0" izz="0.062"/>
+    </inertial>
+    <visual>
+      <material name="wheel_mat"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+      </geometry>
+    </collision>
+  </link>
+
+<!-- TURNTABLES -->
+<link name="left_front_turntable">
+  <inertial>
+    <mass value="${turntable_mass}"/>
+    <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 ${turntable_height/2}" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="${turntable_radius}" length="${turntable_height}"/>
+    </geometry>
+  </visual>
+</link>
+
+<link name="left_rear_turntable">
+  <inertial>
+    <mass value="${turntable_mass}"/>
+    <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 ${turntable_height/2}" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="${turntable_radius}" length="${turntable_height}"/>
+    </geometry>
+  </visual>
+</link>
+
+<link name="right_front_turntable">
+  <inertial>
+    <mass value="${turntable_mass}"/>
+    <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 ${turntable_height/2}" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="${turntable_radius}" length="${turntable_height}"/>
+    </geometry>
+  </visual>
+</link>
+
+<link name="right_rear_turntable">
+  <inertial>
+    <mass value="${turntable_mass}"/>
+    <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 ${turntable_height/2}" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="${turntable_radius}" length="${turntable_height}"/>
+    </geometry>
+  </visual>
+</link>
+
+  <!-- JOINTS -->
+  <joint name="suspension_diff_joint" type="continuous">
+    <parent link="chassis"/>
+    <child link="suspension_diff"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <joint name="left_subchassis_hinge" type="continuous">
+    <parent link="suspension_diff"/>
+    <child link="left_subchassis"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <joint name="right_subchassis_hinge" type="continuous">
+    <parent link="suspension_diff"/>
+    <child link="right_subchassis"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+<joint name="left_front_turntable_joint" type="continuous">
+  <parent link="left_subchassis"/>
+  <child link="left_front_turntable"/>
+  <origin xyz="$(eval ${wheel_spacing_x}/2) $(eval ${wheel_spacing_y}/2) ${subchassis_origin_z}" rpy="0 0 0"/>
+  <axis xyz="0 0 1"/>
+</joint>
+
+<joint name="left_rear_turntable_joint" type="continuous">
+  <parent link="left_subchassis"/>
+  <child link="left_rear_turntable"/>
+  <origin xyz="$(eval -${wheel_spacing_x}/2) $(eval ${wheel_spacing_y}/2) ${subchassis_origin_z}" rpy="0 0 0"/>
+  <axis xyz="0 0 1"/>
+</joint>
+
+<joint name="right_front_turntable_joint" type="continuous">
+  <parent link="right_subchassis"/>
+  <child link="right_front_turntable"/>
+  <origin xyz="$(eval ${wheel_spacing_x}/2) $(eval -${wheel_spacing_y}/2) ${subchassis_origin_z}" rpy="0 0 0"/>
+  <axis xyz="0 0 1"/>
+</joint>
+
+<joint name="right_rear_turntable_joint" type="continuous">
+  <parent link="right_subchassis"/>
+  <child link="right_rear_turntable"/>
+  <origin xyz="$(eval -${wheel_spacing_x}/2) $(eval -${wheel_spacing_y}/2) ${subchassis_origin_z}" rpy="0 0 0"/>
+  <axis xyz="0 0 1"/>
+</joint>
+
+<joint name="left_front_wheel_joint" type="continuous">
+  <parent link="left_front_turntable"/>
+  <child link="left_front_wheel"/>
+  <origin xyz="0 0 $(eval -${turntable_height}/2 - ${wheel_radius})" rpy="0 0 0"/>
+  <axis xyz="0 1 0"/>
+</joint>
+
+<joint name="left_rear_wheel_joint" type="continuous">
+  <parent link="left_rear_turntable"/>
+  <child link="left_rear_wheel"/>
+  <origin xyz="0 0 $(eval -${turntable_height}/2 - ${wheel_radius})" rpy="0 0 0"/>
+  <axis xyz="0 1 0"/>
+</joint>
+
+<joint name="right_front_wheel_joint" type="continuous">
+  <parent link="right_front_turntable"/>
+  <child link="right_front_wheel"/>
+  <origin xyz="0 0 $(eval -${turntable_height}/2 - ${wheel_radius})" rpy="0 0 0"/>
+  <axis xyz="0 1 0"/>
+</joint>
+
+<joint name="right_rear_wheel_joint" type="continuous">
+  <parent link="right_rear_turntable"/>
+  <child link="right_rear_wheel"/>
+  <origin xyz="0 0 $(eval -${turntable_height}/2 - ${wheel_radius})" rpy="0 0 0"/>
+  <axis xyz="0 1 0"/>
+</joint>
+
+<!-- ================= GAZEBO HARMONIC CONTROL ================= -->
+<!--
+<gazebo>
+  <plugin filename="libSwerveDrivePlugin.so"
+          name="SwerveDrivePlugin">
+
+    <steering_joint>left_front_turntable_joint</steering_joint>
+    <steering_joint>right_front_turntable_joint</steering_joint>
+    <steering_joint>left_rear_turntable_joint</steering_joint>
+    <steering_joint>right_rear_turntable_joint</steering_joint>
+
+    <wheel_joint>left_front_wheel_joint</wheel_joint>
+    <wheel_joint>right_front_wheel_joint</wheel_joint>
+    <wheel_joint>left_rear_wheel_joint</wheel_joint>
+    <wheel_joint>right_rear_wheel_joint</wheel_joint>
+
+    <wheel_radius>0.21</wheel_radius>
+    <wheel_base>0.9</wheel_base>
+    <track_width>0.86</track_width>
+
+    <cmd_vel_topic>/cmd_vel</cmd_vel_topic>
+    <odom_topic>/odom</odom_topic>
+
+  </plugin>
+</gazebo>
+-->
+
+</robot>
