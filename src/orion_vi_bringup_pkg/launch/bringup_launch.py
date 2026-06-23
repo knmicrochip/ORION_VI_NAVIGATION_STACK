@@ -215,6 +215,13 @@ def generate_launch_description():
                     'container_name': 'nav2_container',
                 }.items(),
             ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    os.path.join(launch_dir, 'state_publisher_launch.py')
+                ),
+                launch_arguments={
+                }.items(),
+            ),
         ]
     )
 
