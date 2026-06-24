@@ -8,7 +8,7 @@ import os
 
 def generate_launch_description():
     pkg_share = FindPackageShare(package='orion_vi_description').find('orion_vi_description')
-    default_model_path = os.path.join(pkg_share, 'urdf', 'orion_vi_description.urdf.xacro')
+    default_model_path = os.path.join(pkg_share, 'resource' ,'orionVI_description.urdf.xacro')
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',

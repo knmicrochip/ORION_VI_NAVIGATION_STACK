@@ -63,20 +63,20 @@ def generate_launch_description():
 
 			# NIE URUCHAMIAĆ podglądu kamer w rviz2
 
-			IncludeLaunchDescription(
-			PythonLaunchDescriptionSource([os.path.join(
-				get_package_share_directory('realsense2_camera'), 'launch'),
-				'/rs_launch.py']),
-				launch_arguments={'camera_namespace': '',
-								'enable_gyro': 'true',
-								'enable_accel': 'true',
-								'unite_imu_method': '2', # 2-linear_interpolation 
-								'enable_infra1': 'true',
-								'enable_infra2': 'true',
-								'align_depth.enable': 'true',
-								'enable_sync': 'true',
-								'rgb_camera.color_profile': '640x360x30'}.items(),
-				),
+			# IncludeLaunchDescription(
+			# PythonLaunchDescriptionSource([os.path.join(
+			#	get_package_share_directory('realsense2_camera'), 'launch'),
+			#	'/rs_launch.py']),
+			#	launch_arguments={'camera_namespace': '',
+			#					'enable_gyro': 'true',
+			#					'enable_accel': 'true',
+			#					'unite_imu_method': '2', # 2-linear_interpolation 
+			#					'enable_infra1': 'true',
+			#					'enable_infra2': 'true',
+			#					'align_depth.enable': 'true',
+			#					'enable_sync': 'true',
+			#					'rgb_camera.color_profile': '640x360x30'}.items(),
+			#	),
 				Node(
 			package='rtabmap_odom', executable='stereo_odometry', output='screen',
 			parameters=[vo_parameters],
