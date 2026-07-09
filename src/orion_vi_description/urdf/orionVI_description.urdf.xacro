@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="four_wheeled_robot" xmlns:xacro="http://ros.org/wiki/xacro" author="Aleksandra Grzybek">
+<robot name="orionVI" xmlns:xacro="http://ros.org/wiki/xacro" author="Aleksandra Grzybek">
 
   <!-- Converted from rover_model.sdf -->
 

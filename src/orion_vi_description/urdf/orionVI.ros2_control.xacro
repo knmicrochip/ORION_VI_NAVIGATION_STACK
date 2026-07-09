@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="orionVI_ros2_control" params="name use_gazebo:=^|false">
+
+    <ros2_control name="orionVI" type="system">
+      <hardware>
+        <xacro:if value="${use_gazebo}">
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </xacro:if>
+        <xacro:unless value="${use_gazebo}">
+          <plugin>mqtt_hardware_interface/MqttHardwareInterface</plugin>
+          <param name="mqtt_broker_uri">"mqtt://localhost:1884"</param>
+          <param name="mqtt_client_id">"MqttHardwareInterface"</param>
+          <param name="QOS">0</param>
+        </xacro:unless>
+      </hardware>
+
+      <xacro:macro name="turntable" params="prefix topic_state topic_com">
+        <joint name="${prefix}_turntable_joint">
+          <command_interface name="position">
+            <param name="topic">${topic_com}</param>
+          </command_interface>
+          <state_interface name="position">
+            <param name="topic">${topic_state}</param>
+          </state_interface>
+        </joint>
+      </xacro:macro>
+
+      <xacro:macro name="wheel" params="prefix topic_state topic_com">
+        <joint name="${prefix}_wheel_joint">
+          <command_interface name="velocity">
+            <param name="topic">${topic_com}</param>
+          </command_interface>
+          <state_interface name="velocity">
+            <param name="topic">${topic_state}</param>
+          </state_interface>
+        </joint>
+      </xacro:macro>
+
+      <xacro:wheel prefix="left_front" topic_state="/left_front_wheel/state" topic_com="/left_front_wheel/com"/>
+      <xacro:wheel prefix="left_rear" topic_state="/left_rear_wheel/state" topic_com="/left_rear_wheel/com"/>
+      <xacro:wheel prefix="right_front" topic_state="/right_front_wheel/state" topic_com="/right_front_wheel/com"/>
+      <xacro:wheel prefix="right_rear" topic_state="/right_rear_wheel/state" topic_com="/right_rear_wheel/com"/>
+
+      <xacro:turntable prefix="left_front" topic_state="/left_front_turntable/state" topic_com="/left_front_turntable/com"/>
+      <xacro:turntable prefix="left_rear" topic_state="/left_rear_turntable/state" topic_com="/left_rear_turntable/com"/>
+      <xacro:turntable prefix="right_front" topic_state="/right_front_turntable/state" topic_com="/right_front_turntable/com"/>
+      <xacro:turntable prefix="right_rear" topic_state="/right_rear_turntable/state" topic_com="/right_rear_turntable/com"/>
+
+    </ros2_control>
+
+  </xacro:macro>
+
+</robot>
