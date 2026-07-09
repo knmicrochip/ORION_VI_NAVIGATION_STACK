@@ -96,15 +96,15 @@ Next Year improvements:
 
 TODO
 
-![](PLAN.excalidraw.png)
+![](docs/PLAN.excalidraw.png)
 
 # Sekcja Docker
 
-patrz [DOCKER.md](./DOCKER.md)
+patrz [DOCKER.md](./docs/DOCKER.md)
 
 # Sekcja organizacja - skróty itp
 
-Aby stworzyć środowisko developerskie patrz na [DEVELOPMENT.md](./DEVELOPMENT.md)
+Aby stworzyć środowisko developerskie patrz na [DEVELOPMENT.md](./docs/DEVELOPMENT.md)
 
 
 ## ROS2
