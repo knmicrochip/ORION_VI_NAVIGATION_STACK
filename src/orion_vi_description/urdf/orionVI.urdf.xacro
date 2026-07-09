@@ -14,13 +14,13 @@ https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_desc
   <xacro:include filename="orionVI.materials.xacro" />
 
   <!-- Import RRBot ros2_control description -->
-  <xacro:include filename="$(find orion_control)/ros2_control/orionVI.ros2_control.xacro" />
+  <xacro:include filename="$(find orion_vi_description)/urdf/orionVI.ros2_control.xacro" />
 
   <xacro:orionVI_ros2_control
     name="OrionVI" use_gazebo="$(arg use_gazebo)"/>
 
   <xacro:if value="$(arg use_gazebo)">
     <!-- Import Gazebo Classic definitions + plugin -->
-    <xacro:include filename="$(find orion_control)/gazebo/orionVI.gazebo.xacro" />
+    <xacro:include filename="$(find orion_vi_description)/urdf/orionVI.gazebo.xacro" />
   </xacro:if>
 </robot>
