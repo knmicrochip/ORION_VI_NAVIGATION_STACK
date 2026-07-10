@@ -88,6 +88,7 @@ COPY . ${WS_DIR}
 # building the ROS2 package inside the docker 
 RUN colcon build --packages-select orion_vi_bringup_pkg
 RUN colcon build --packages-select orion_vi_description
+RUN colcon build --packages-select swerve_drive_controller
 
 ARG DEBIAN_FRONTEND=dialog
 
@@ -95,3 +96,36 @@ CMD ["/bin/bash", "-c", "source ${WS_DIR}/install/setup.bash && ros2 launch orio
 
 # this dockerfile is for running the full navigation stack 
 # see DOCKER.md for more information
+if(BUILD_TESTING)
+  find_package(controller_manager REQUIRED)
+  find_package(ament_cmake_gmock REQUIRED)
+  find_package(ros2_control_test_assets REQUIRED)
+
+  ament_add_gmock(test_swerve_drive_controller
+    test/test_swerve_drive_controller.cpp
+  )
+
+  target_link_libraries(test_swerve_drive_controller
+    swerve_drive_controller
+    controller_interface::controller_interface
+    hardware_interface::hardware_interface
+    pluginlib::pluginlib
+    rclcpp::rclcpp
+    rclcpp_lifecycle::rclcpp_lifecycle
+    rcpputils::rcpputils
+    realtime_tools::realtime_tools
+    tf2::tf2
+    ${tf2_msgs_TARGETS}
+    ${geometry_msgs_TARGETS}
+    ${control_msgs_TARGETS}
+    ${nav_msgs_TARGETS}
+  )
+
+  add_definitions(-DTEST_FILES_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/test")
+
+  ament_add_gmock(test_load_swerve_drive_controller test/test_load_swerve_drive_controller.cpp)
+  target_link_libraries(test_load_swerve_drive_controller
+    controller_manager::controller_manager
+    ros2_control_test_assets::ros2_control_test_assets
+  )
+endif()
