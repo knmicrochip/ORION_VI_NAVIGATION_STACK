@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 import os
 from glob import glob
 
-package_name = 'orion_vi_bringup_pkg'
+package_name = 'orion_vi_description'
 
 setup(
     name=package_name,
@@ -13,15 +13,12 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'launch'), glob('launch/*_launch.py')),
-        (os.path.join('share', package_name, 'config'), glob('config/*_config.yaml')),
-        (os.path.join('share', package_name, 'config'), glob('config/*_params.json')),
-        (os.path.join('share', package_name, 'config'), glob('config/*_controllers.yaml'))
+        (os.path.join('share', package_name, 'urdf'), glob('urdf/*.xacro')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='ludrol',
-    maintainer_email='jot.s.gam@gmail.com',
+    maintainer='Bungok',
+    maintainer_email='ignacy@piekarczyk.pl',
     description='TODO: Package description',
     license='Apache 2.0',
     extras_require={

@@ -72,6 +72,7 @@ RUN apt-get update && apt-get install -y \
     ros-$ROS_DISTRO-aruco-opencv \
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
+    ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-realsense2-* &&\
     rm -rf /var/lib/apt/lists/*
 
@@ -86,6 +87,7 @@ COPY . ${WS_DIR}
 
 # building the ROS2 package inside the docker 
 RUN colcon build --packages-select orion_vi_bringup_pkg
+RUN colcon build --packages-select orion_vi_description
 
 ARG DEBIAN_FRONTEND=dialog
 

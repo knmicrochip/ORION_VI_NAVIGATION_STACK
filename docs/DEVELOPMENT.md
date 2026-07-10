@@ -91,6 +91,7 @@ sudo apt update && sudo apt install -y \
     ros-$ROS_DISTRO-aruco-opencv \
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
+    ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-realsense2-* 
 ```
 
@@ -106,11 +107,6 @@ https://deepwiki.com/introlab/rtabmap_ros/2-installation-and-setup
 
 ---
 # Other stuff
-
-```
-example use first node: ros2 run szuflada slam
-example realsense map: ros2 launch rtabmap_examples realsense_d435i_color.launch.py 
-```
 
 ### Gazebo
 
@@ -191,5 +187,6 @@ sudo apt install -y \
     ros-$ROS_DISTRO-aruco-opencv \
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
+    ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-realsense2-* 
 ```
