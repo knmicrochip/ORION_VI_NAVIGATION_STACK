@@ -114,7 +114,11 @@ Aby stworzyć środowisko developerskie patrz na [DEVELOPMENT.md](./docs/DEVELOP
 
 ## Xarco, Gazebo, Symulacja
 
-TODO
+By uruchomić w trybie symulacji użyj komendy:
+``
+ros2 launch orion_vi_bringup_pkg simulation_launch.py
+``
+.
 
 # PLAN na ERC
 
