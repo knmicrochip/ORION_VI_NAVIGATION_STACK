@@ -14,7 +14,7 @@
 
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler, ExecuteProcess
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 
@@ -22,9 +22,18 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
+
 def generate_launch_description():
-    # Declare arguments
+
     declared_arguments = []
+
+    use_gazebo = DeclareLaunchArgument(
+            "use_gazebo",
+            default_value="false",
+            description="Whether is run in simulation node",
+        )
+    
+    declared_arguments.append(use_gazebo)
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -39,7 +48,8 @@ def generate_launch_description():
                 ]
             ),
             " ",
-            "use_gazebo:=false",
+            "use_gazebo:=",
+            LaunchConfiguration("use_gazebo"),
         ]
     )
     robot_description = {"robot_description": robot_description_content}

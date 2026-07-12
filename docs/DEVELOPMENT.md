@@ -92,6 +92,7 @@ sudo apt update && sudo apt install -y \
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
     ros-$ROS_DISTRO-ros2-control \
+    ros-$ROS_DISTRO-gz-ros2-control \
     ros-$ROS_DISTRO-realsense2-* 
 ```
 
@@ -188,5 +189,6 @@ sudo apt install -y \
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
     ros-$ROS_DISTRO-ros2-control \
+    ros-$ROS_DISTRO-gz-ros2-control \
     ros-$ROS_DISTRO-realsense2-* 
 ```

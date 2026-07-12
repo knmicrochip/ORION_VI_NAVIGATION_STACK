@@ -51,6 +51,7 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
     use_localization = LaunchConfiguration('use_localization')
+    use_rviz = LaunchConfiguration("use_rviz")
 
     config_dir = os.path.join(FindPackageShare(package='orion_vi_bringup').find('orion_vi_bringup_pkg'),'config')
     params_file = os.path.join(config_dir, 'bringup_config.yaml')
@@ -67,70 +68,143 @@ def generate_launch_description():
     # '<robot_namespace>' keyword shall be replaced by 'namespace' launch argument
     # in config file 'nav2_multirobot_params.yaml' as a default & example.
     # User defined config file should contain '<robot_namespace>' keyword for the replacements.
-    params_file = ReplaceString(
-        source_file=params_file,
-        replacements={'<robot_namespace>': ('/', namespace)},
-        condition=IfCondition(use_namespace),
+
+    stdout_linebuf_envvar = SetEnvironmentVariable(
+        'RCUTILS_LOGGING_BUFFERED_STREAM', '1'
     )
 
-    configured_params = ParameterFile(
-        RewrittenYaml(
-            source_file=params_file,
-            root_key=namespace,
-            param_rewrites={},
-            convert_types=True,
+    declare_namespace_cmd = DeclareLaunchArgument(
+        'namespace', default_value='', description='Top-level namespace'
+    )
+
+    declare_use_namespace_cmd = DeclareLaunchArgument(
+        'use_namespace',
+        default_value='false',
+        description='Whether to apply a namespace to the navigation stack',
+    )
+
+    declare_slam_cmd = DeclareLaunchArgument(
+        'slam', default_value='False', description='Whether run a SLAM'
+    )
+
+    declare_map_yaml_cmd = DeclareLaunchArgument(
+        'map', default_value='', description='Full path to map yaml file to load'
+    )
+
+    declare_use_localization_cmd = DeclareLaunchArgument(
+        'use_localization', default_value='True',
+        description='Whether to enable localization or not'
+    )
+
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='false',
+        description='Use simulation (Gazebo) clock if true',
+    )
+
+    declare_params_file_cmd = DeclareLaunchArgument(
+        'params_file',
+        default_value=os.path.join(bringup_dir, 'params', 'nav2_params.yaml'),
+        description='Full path to the ROS2 parameters file to use for all launched nodes',
+    )
+
+    declare_autostart_cmd = DeclareLaunchArgument(
+        'autostart',
+        default_value='true',
+        description='Automatically startup the nav2 stack',
+    )
+
+    declare_use_composition_cmd = DeclareLaunchArgument(
+        'use_composition',
+        default_value='True',
+        description='Whether to use composed bringup',
+    )
+
+    declare_use_respawn_cmd = DeclareLaunchArgument(
+        'use_respawn',
+        default_value='False',
+        description='Whether to respawn if a node crashes. Applied when composition is disabled.',
+    )
+
+    declare_log_level_cmd = DeclareLaunchArgument(
+        'log_level', default_value='info', description='log level'
+    )
+
+    declare_use_rviz_cmd = DeclareLaunchArgument(
+        'use_rviz', default_value='True', description='Whether to launch Rviz2'
+    )
+
+    declare_use_gazebo_cmd = DeclareLaunchArgument(
+        'use_gazebo', default_value='False', description='Whether is running in simulation mode'
+    )
+
+    bringup_sim_group = GroupAction([
+        PushROSNamespace(condition=IfCondition(use_namespace), namespace=namespace),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(os.path.join(launch_dir, 'bringup_launch.py')),
+            launch_arguments={
+                'namespace': namespace,
+                'slam': slam,
+                'map': map_yaml_file,
+                'use_sim_time': use_sim_time,
+                'params_file': params_file,
+                'autostart': autostart,
+                'use_composition': use_composition,
+                'use_respawn': use_respawn,
+                'use_rviz': use_rviz,
+                'use_gazebo' : 'true',
+                'use_keepout_zones': 'False',
+                'use_speed_zones': 'False',
+                'container_name': 'nav2_container',
+            }.items(),
         ),
-        allow_substs=True,
-    )
 
-    gazebo_bridge = Node(
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare("ros_gz_sim"), "/launch/gz_sim.launch.py"]
+            ),
+            launch_arguments=[("gz_args", " -r -v 3 empty.sdf")],
+        ),
+
+        Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=["/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"],
         output="screen",
-    )
+        ),
 
-    gz_spawn_entity = Node(
-        package="ros_gz_sim",
-        executable="create",
-        output="screen",
-        arguments=[
-            "-topic",
-            "/robot_description",
-            "-name",
-            "orionVI_system_position",
-            "-allow_renaming",
-            "true",
-        ],
-    )
+        Node(
+            package="ros_gz_sim",
+            executable="create",
+            output="screen",
+            arguments=[
+                "-topic",
+                "/robot_description",
+                "-name",
+                "orionVI_system_position",
+                "-allow_renaming",
+                "true",
+            ],
+        ),
 
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        output="log",
-        arguments=["-d", 
-            PathJoinSubstitution(
-                [FindPackageShare("orion_vi_bringup_pkg"), "config", "nav2_default_view_config.rviz"]
-            ),
-        ],
-    )
+    ])
+    
 
-    bringup_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'bringup_launch.py')),
-        launch_arguments={
-            'namespace': namespace,
-            'slam': slam,
-            'map': map_yaml_file,
-            'use_sim_time': use_sim_time,
-            'params_file': params_file,
-            'autostart': autostart,
-            'use_composition': use_composition,
-            'use_respawn': use_respawn,
-            'use_keepout_zones': 'False',
-            'use_speed_zones': 'False',
-            'container_name': 'nav2_container',
-        }.items(),
-    )
+    ld = LaunchDescription()
+    ld.add_action(declare_namespace_cmd)
+    ld.add_action(declare_use_namespace_cmd)
+    ld.add_action(declare_slam_cmd)
+    ld.add_action(declare_map_yaml_cmd)
+    ld.add_action(declare_use_sim_time_cmd)
+    ld.add_action(declare_params_file_cmd)
+    ld.add_action(declare_autostart_cmd)
+    ld.add_action(declare_use_composition_cmd)
+    ld.add_action(declare_use_respawn_cmd)
+    ld.add_action(declare_log_level_cmd)
+    ld.add_action(declare_use_localization_cmd)
+    ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_use_gazebo_cmd)
+    ld.add_action(bringup_sim_group)
 
     return ld

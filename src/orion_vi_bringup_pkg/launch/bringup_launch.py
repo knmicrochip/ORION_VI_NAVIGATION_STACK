@@ -26,7 +26,7 @@ from launch.actions import (
 )
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.actions import PushROSNamespace
 from launch_ros.descriptions import ParameterFile
@@ -51,6 +51,8 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
     use_localization = LaunchConfiguration('use_localization')
+    use_rviz = LaunchConfiguration("use_rviz")
+    use_gazebo = LaunchConfiguration("use_gazebo")
 
     config_dir = os.path.join(FindPackageShare(package='orion_vi_bringup').find('orion_vi_bringup_pkg'),'config')
     params_file = os.path.join(config_dir, 'bringup_config.yaml')
@@ -144,6 +146,14 @@ def generate_launch_description():
         'log_level', default_value='info', description='log level'
     )
 
+    declare_use_rviz_cmd = DeclareLaunchArgument(
+        'use_rviz', default_value='True', description='Whether to launch Rviz2'
+    )
+
+    declare_use_gazebo_cmd = DeclareLaunchArgument(
+        'use_gazebo', default_value='False', description='Whether is running in simulation mode'
+    )
+
     # Specify the actions
     bringup_cmd_group = GroupAction(
         [
@@ -157,6 +167,18 @@ def generate_launch_description():
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings,
                 output='screen',
+            ),
+            Node(
+                condition=IfCondition(use_rviz),
+                package="rviz2",
+                executable="rviz2",
+                name="rviz2",
+                output="log",
+                arguments=["-d", 
+                    PathJoinSubstitution(
+                        [FindPackageShare("orion_vi_bringup_pkg"), "config", "nav2_default_view_config.rviz"]
+                    ),
+                ],
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
@@ -226,6 +248,7 @@ def generate_launch_description():
                     # 'autostart': autostart,
                     # 'use_respawn': use_respawn,
                     # 'params_file': params_file,
+                    'use_gazebo' : use_gazebo
                 }.items(),
             ),
         ]
@@ -265,7 +288,9 @@ def generate_launch_description():
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
     ld.add_action(declare_use_localization_cmd)
-
+    ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_use_gazebo_cmd)
+    
     # Add the actions to launch all of the navigation nodes
     ld.add_action(bringup_cmd_group)
     # ld.add_action(bringup_slam_group)
