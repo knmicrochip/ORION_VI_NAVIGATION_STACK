@@ -348,31 +348,4 @@
   <axis xyz="0 1 0"/>
 </joint>
 
-<!-- ================= GAZEBO HARMONIC CONTROL ================= -->
-<!--
-<gazebo>
-  <plugin filename="libSwerveDrivePlugin.so"
-          name="SwerveDrivePlugin">
-
-    <steering_joint>left_front_turntable_joint</steering_joint>
-    <steering_joint>right_front_turntable_joint</steering_joint>
-    <steering_joint>left_rear_turntable_joint</steering_joint>
-    <steering_joint>right_rear_turntable_joint</steering_joint>
-
-    <wheel_joint>left_front_wheel_joint</wheel_joint>
-    <wheel_joint>right_front_wheel_joint</wheel_joint>
-    <wheel_joint>left_rear_wheel_joint</wheel_joint>
-    <wheel_joint>right_rear_wheel_joint</wheel_joint>
-
-    <wheel_radius>0.21</wheel_radius>
-    <wheel_base>0.9</wheel_base>
-    <track_width>0.86</track_width>
-
-    <cmd_vel_topic>/cmd_vel</cmd_vel_topic>
-    <odom_topic>/odom</odom_topic>
-
-  </plugin>
-</gazebo>
--->
-
 </robot>

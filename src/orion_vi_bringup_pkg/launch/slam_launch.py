@@ -97,40 +97,6 @@ def generate_launch_description():
                          'publish_tf':False}],
             remappings=[('imu/data_raw', '/camera/imu')]),
 
-			Node(
-					package='tf2_ros',
-					executable='static_transform_publisher', # zamienić na https://github.com/ros/robot_state_publisher
-					# output='screen',
-					arguments=[
-						'0.0', '0.0', '0.4',   # XYZ position
-						'0', '0', '0', #roll pitch yaw (propably) (I hope it's not quaternion)
-						'base_link',
-						'camera_link'
-        				]
-				),
-
-
-			# Node(
-			# 	package='szuflada_pkg',
-			# 	namespace='szuflada',
-			# 	executable='slam_node',
-			# 	name='szuflada',
-			# 	arguments=['']
-			# 	)
-			#
-			# PÓKI NIE MAMY MACIERZY TO WYWALAMY EKF
-			# I UŻYWAMY ODOM ZE SLAMU
-			#
-			# Node(
-			# 	package='robot_localization',
-			# 	executable='ekf_node',
-			# 	name='ekf_filter_node',
-			# 	output='screen',
-			# 	parameters=[
-			# 		'config/szuflada_ekf.yaml' #TODO zamienić na globalną ścieszkę
-			# 	]
-    		# )
-
 		]
 	)
 
