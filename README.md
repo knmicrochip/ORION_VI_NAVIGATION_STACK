@@ -63,6 +63,7 @@ We are also looking into adding YOLO based object detection for detecting switch
 - [x] fix realsense regression
 - [x] fix steamdeck input with guID
 - [ ] set up foxglove
+- [ ] nipisać funkcje w pythonie do walidacji i ograniczenia wektora prędkości
 
 ---
 
