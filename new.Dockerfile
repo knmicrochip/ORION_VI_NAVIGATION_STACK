@@ -48,9 +48,9 @@ RUN apt-get update && \
 # RUN wget https://github.com/realsenseai/librealsense/archive/refs/tags/v2.55.1.tar.gz && tar -xf v2.55.1.tar.gz  && rm -fr v2.55.1.tar.gz &&\
 #     mv librealsense-2.55.1/ librealsense &&\
 
-RUN git clone https://github.com/realsenseai/librealsense.git &&\
+RUN git clone --depth 1 https://github.com/realsenseai/librealsense.git &&\
     cd librealsense &&\
-    mkdir build && cd build &&\
+    mkdir -p build && cd build &&\
     cmake .. \
         #  -DBUILD_WITH_CUDA=true \
         #  -DBUILD_CUDA_HOST_COMPILER=/usr/bin/g++-12 \
