@@ -54,7 +54,6 @@
   <xacro:property name="turntable_radius" value="$(eval ${subchassis_y}/2)"/>
   <xacro:property name="turntable_mass" value="1.0"/>
 
-  <!-- CHASSIS -->
   <!-- Materials -->
   <material name="wheel_mat">
     <color rgba="0.1490196 0.1490196 0.1490196 1.0"/>
@@ -66,6 +65,21 @@
     <color rgba="0.6431373 0.6431373 0.6431373 1.0"/>
   </material>
 
+  <!--CAMERA-->
+  <link name="camera">
+    <inertial>
+      <origin xyz="${chassis_x/2} 0 ${chassis_y+chassis_origin_z}" rpy="0 0 0"/>
+    </inertial>
+    <visual name="camera_visual">
+      <material name="chassis_mat"/>
+      <origin xyz="${chassis_x/2} 0 ${chassis_y+chassis_origin_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.02 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <!-- CHASSIS -->  
   <link name="chassis">
     <inertial>
       <origin xyz="0 0 ${chassis_origin_z}" rpy="0 0 0"/>
@@ -273,24 +287,30 @@
   </visual>
 </link>
 
-  <!-- JOINTS -->
-  <joint name="suspension_diff_joint" type="continuous">
-    <parent link="chassis"/>
-    <child link="suspension_diff"/>
-    <axis xyz="0 1 0"/>
-  </joint>
+<!-- JOINTS -->
+<joint name="camera_joint" type="fixed">
+  <parent link="camera"/>
+  <child link="chassis"/>
+  <axis xyz="1 0 0"/>
+</joint>
 
-  <joint name="left_subchassis_hinge" type="continuous">
-    <parent link="suspension_diff"/>
-    <child link="left_subchassis"/>
-    <axis xyz="0 1 0"/>
-  </joint>
+<joint name="suspension_diff_joint" type="continuous">
+  <parent link="chassis"/>
+  <child link="suspension_diff"/>
+  <axis xyz="0 1 0"/>
+</joint>
 
-  <joint name="right_subchassis_hinge" type="continuous">
-    <parent link="suspension_diff"/>
-    <child link="right_subchassis"/>
-    <axis xyz="0 1 0"/>
-  </joint>
+<joint name="left_subchassis_hinge" type="continuous">
+  <parent link="suspension_diff"/>
+  <child link="left_subchassis"/>
+  <axis xyz="0 1 0"/>
+</joint>
+
+<joint name="right_subchassis_hinge" type="continuous">
+  <parent link="suspension_diff"/>
+  <child link="right_subchassis"/>
+  <axis xyz="0 1 0"/>
+</joint>
 
 <joint name="left_front_turntable_joint" type="continuous">
   <parent link="left_subchassis"/>
