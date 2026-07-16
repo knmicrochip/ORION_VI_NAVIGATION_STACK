@@ -160,11 +160,15 @@ def generate_launch_description():
             }.items(),
         ),
 
+
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare("ros_gz_sim"), "/launch/gz_sim.launch.py"]
             ),
-            launch_arguments=[("gz_args", " -r -v 3 empty.sdf")],
+            launch_arguments={
+                "gz_args": [PathJoinSubstitution([FindPackageShare("orion_vi_description"), 'urdf','world_demo.sdf'])],
+                'on_exit_shutdown': 'True'
+            }.items(),
         ),
 
         Node(
