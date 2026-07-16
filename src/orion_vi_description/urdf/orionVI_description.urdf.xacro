@@ -67,14 +67,12 @@
 
   <!--CAMERA-->
   <link name="camera">
-    <inertial>
-      <origin xyz="${chassis_x/2} 0 ${chassis_y+chassis_origin_z}" rpy="0 0 0"/>
-    </inertial>
+    <origin xyz="${chassis_x/2} 0 ${(chassis_z+chassis_origin_z)/2}" rpy="0 0 0"/>
     <visual name="camera_visual">
       <material name="chassis_mat"/>
-      <origin xyz="${chassis_x/2} 0 ${chassis_y+chassis_origin_z}" rpy="0 0 0"/>
+      <origin xyz="${chassis_x/2} 0 ${(chassis_z+chassis_origin_z)/2}" rpy="0 0 0"/>
       <geometry>
-        <box size="0.01 0.02 0.01"/>
+        <box size="0.1 0.2 0.1"/>
       </geometry>
     </visual>
   </link>
