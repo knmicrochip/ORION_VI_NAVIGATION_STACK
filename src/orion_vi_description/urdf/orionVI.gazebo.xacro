@@ -14,4 +14,6 @@ https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_desc
 
     <xacro:include filename="$(find orion_vi_description)/urdf/sensors/imu.xacro" />
     <xacro:add_imu link="camera" name="camera_imu"/>
+    <xacro:add_imu link="left_subchassis" name="left_imu"/>
+    <xacro:add_imu link="right_subchassis" name="right_imu"/>
 </robot>
