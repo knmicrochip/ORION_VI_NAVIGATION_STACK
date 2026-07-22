@@ -3,6 +3,7 @@
 <xacro:macro name="add_imu" params="link name">
     <gazebo reference="${link}">
     <sensor name="${name}" type="imu">
+        <topic>${name}</topic>
         <always_on>true</always_on>
         <update_rate>100</update_rate>
         <imu>
@@ -47,13 +48,6 @@
             </z>
           </linear_acceleration>
         </imu>
-        <plugin name="bytes_imu" filename="libgazebo_ros_imu_sensor.so">
-            <ros>
-                <namespace>imu</namespace>
-                <remapping>~/out:=data</remapping>
-            </ros>
-            <initial_orientation_as_reference>false</initial_orientation_as_reference>
-        </plugin>
     </sensor>
     </gazebo>
 </xacro:macro>

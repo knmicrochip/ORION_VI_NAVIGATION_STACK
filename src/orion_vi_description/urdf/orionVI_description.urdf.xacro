@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot name="orionVI" xmlns:xacro="http://ros.org/wiki/xacro" author="Aleksandra Grzybek">
 
-  <!-- Converted from rover_model.sdf -->
+  <xacro:include filename="$(find orion_vi_description)/urdf/bootlegsense.urdf.xacro" />
 
   <!-- Properties -->
   <xacro:property name="wheel_radius" value="0.21"/>
@@ -65,17 +65,8 @@
     <color rgba="0.6431373 0.6431373 0.6431373 1.0"/>
   </material>
 
-  <!--CAMERA-->
-  <link name="camera">
-    <origin xyz="${chassis_x/2} 0 ${(chassis_z+chassis_origin_z)/2}" rpy="0 0 0"/>
-    <visual name="camera_visual">
-      <material name="chassis_mat"/>
-      <origin xyz="${chassis_x/2} 0 ${(chassis_z+chassis_origin_z)/2}" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.1 0.2 0.1"/>
-      </geometry>
-    </visual>
-  </link>
+  <!--REALSENSE-->
+  <xacro:add_realsense_link suffix ="front"/> 
   
   <!-- CHASSIS -->  
   <link name="chassis">
@@ -286,8 +277,8 @@
 </link>
 
 <!-- JOINTS -->
-<joint name="camera_joint" type="fixed">
-  <parent link="camera"/>
+<joint name="realsense_front_joint" type="fixed">
+  <parent link="realsense_front_link"/>
   <child link="chassis"/>
   <axis xyz="1 0 0"/>
 </joint>
