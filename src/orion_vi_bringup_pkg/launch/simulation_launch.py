@@ -32,6 +32,8 @@ from launch_ros.actions import PushROSNamespace
 from launch_ros.descriptions import ParameterFile
 from nav2_common.launch import ReplaceString, RewrittenYaml
 from launch_ros.substitutions import FindPackageShare
+from ros_gz_bridge.actions import RosGzBridge
+
 
 
 def generate_launch_description():
@@ -52,6 +54,8 @@ def generate_launch_description():
     log_level = LaunchConfiguration('log_level')
     use_localization = LaunchConfiguration('use_localization')
     use_rviz = LaunchConfiguration("use_rviz")
+    bridge_config_file = LaunchConfiguration("bridge_config_file")
+    bridge_name = LaunchConfiguration("bridge_name")
 
     config_dir = os.path.join(FindPackageShare(package='orion_vi_bringup').find('orion_vi_bringup_pkg'),'config')
     params_file = os.path.join(config_dir, 'bringup_config.yaml')
@@ -138,6 +142,21 @@ def generate_launch_description():
         'use_gazebo', default_value='False', description='Whether is running in simulation mode'
     )
 
+    declare_bridge_config_file_cmd = DeclareLaunchArgument(
+        'bridge_config_file', 
+        default_value=os.path.join(bringup_dir, 'config', 'gz_bridge_config.yaml'),
+        description='gz bridge YAML config file'
+    )
+
+    declare_bridge_name_cmd = DeclareLaunchArgument(
+        'bridge_name', default_value="ros_gz_bridge", description='Name of ros_gz_bridge node'
+    )
+
+    ros_gz_bridge_action = RosGzBridge(
+        bridge_name=LaunchConfiguration('bridge_name'),
+        config_file=LaunchConfiguration('bridge_config_file'),
+    )
+
     bringup_sim_group = GroupAction([
         PushROSNamespace(condition=IfCondition(use_namespace), namespace=namespace),
 
@@ -172,13 +191,6 @@ def generate_launch_description():
         ),
 
         Node(
-        package="ros_gz_bridge",
-        executable="parameter_bridge",
-        arguments=["/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"],
-        output="screen",
-        ),
-
-        Node(
             package="ros_gz_sim",
             executable="create",
             output="screen",
@@ -209,6 +221,8 @@ def generate_launch_description():
     ld.add_action(declare_use_localization_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(declare_use_gazebo_cmd)
+    ld.add_action(declare_bridge_name_cmd)
+    ld.add_action(declare_bridge_config_file_cmd)
+    ld.add_action(ros_gz_bridge_action)
     ld.add_action(bringup_sim_group)
-
     return ld
