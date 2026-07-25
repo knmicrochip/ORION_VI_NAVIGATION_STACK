@@ -58,7 +58,7 @@ RUN colcon build --packages-select swerve_drive_controller
 
 ARG DEBIAN_FRONTEND=dialog
 
-CMD ["/bin/bash", "-c", "source ${WS_DIR}/install/setup.bash && ros2 launch orion_vi_bringup_pkg bringup_launch.py" ]
+CMD ["/bin/bash", "-c", "source ${WS_DIR}/install/setup.bash && ros2 launch orion_vi_bringup_pkg simulation_launch.py" ]
 
 # this dockerfile is for running the full navigation stack with gazebo simulation
 # see DOCKER.md for more information
