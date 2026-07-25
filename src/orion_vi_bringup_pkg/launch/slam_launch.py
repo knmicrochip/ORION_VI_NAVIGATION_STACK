@@ -1,15 +1,22 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node,SetParameter
 
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+from launch.conditions import UnlessCondition
 
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 import os
 
 def generate_launch_description():
+	use_gazebo = LaunchConfiguration("use_gazebo")
+
+	declare_use_gazebo_cmd = DeclareLaunchArgument(
+		'use_gazebo', default_value='False', description='Whether is running in simulation mode'
+	)
+
 	vo_parameters={
 		'frame_id':'base_link',
 		'wait_imu_to_init':True}
@@ -67,6 +74,7 @@ def generate_launch_description():
 			PythonLaunchDescriptionSource([os.path.join(
 				get_package_share_directory('realsense2_camera'), 'launch'),
 				'/rs_launch.py']),
+				condition=UnlessCondition(use_gazebo),
 				launch_arguments={'camera_namespace': '',
 								'enable_gyro': 'true',
 								'enable_accel': 'true',
@@ -100,6 +108,7 @@ def generate_launch_description():
 		]
 	)
 
+	ld.add_action(declare_use_gazebo_cmd)
 	# nav2_bringup_launch = IncludeLaunchDescription(
 	# 	PythonLaunchDescriptionSource(
 	# 		#można to zrobić ładniej

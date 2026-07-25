@@ -191,6 +191,7 @@ def generate_launch_description():
                     'autostart': autostart,
                     'use_respawn': use_respawn,
                     'params_file': params_file,
+                    'use_gazebo' : use_gazebo,
                 }.items(),
             ),
             IncludeLaunchDescription(
