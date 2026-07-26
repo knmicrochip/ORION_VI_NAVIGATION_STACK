@@ -7,7 +7,7 @@ https://github.com/ros-simulation/gazebo_ros_demos/blob/kinetic-devel/rrbot_desc
 
     <!-- ros_control plugin -->
     <gazebo>
-      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
         <parameters>$(find orion_vi_bringup_pkg)/config/orionVI_controllers.yaml</parameters>
       </plugin>
     </gazebo>

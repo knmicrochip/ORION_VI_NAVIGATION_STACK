@@ -62,12 +62,6 @@ def generate_launch_description():
         ]
     )
 
-    control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters=[robot_controllers],
-        output="both",
-    )
     robot_state_pub_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -84,7 +78,7 @@ def generate_launch_description():
     robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["forward_position_controller", "--param-file", robot_controllers],
+        arguments=["swerve_drive_controller", "--param-file", robot_controllers],
     )
 
     # Delay start of robot_controller after `joint_state_broadcaster`
@@ -96,7 +90,6 @@ def generate_launch_description():
     )
 
     nodes = [
-        control_node,
         joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
         robot_state_pub_node,

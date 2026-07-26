@@ -185,7 +185,7 @@ def generate_launch_description():
                 [FindPackageShare("ros_gz_sim"), "/launch/gz_sim.launch.py"]
             ),
             launch_arguments={
-                "gz_args": [PathJoinSubstitution([FindPackageShare("orion_vi_description"), 'urdf','world_demo.sdf'])],
+                "gz_args": ["-r ",PathJoinSubstitution([FindPackageShare("orion_vi_description"), 'urdf','world_demo.sdf'])],
                 'on_exit_shutdown': 'True'
             }.items(),
         ),
