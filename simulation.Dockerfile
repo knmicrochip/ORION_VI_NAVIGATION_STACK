@@ -10,6 +10,10 @@ RUN apt-get update && apt-get install -y \
     apt-transport-https \
     && rm -rf /var/lib/apt/lists/*
 
+# ===========================
+# INSTALL REALSENSE FROM SOURCE
+# ===========================
+
 RUN apt-get update && \
     apt-get install -y software-properties-common curl apt-transport-https \
     git make cmake libssl-dev libusb-1.0-0-dev \
@@ -17,6 +21,23 @@ RUN apt-get update && \
     wget build-essential \
     libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev at nvidia-cuda-toolkit \
     gcc-12 g++-12
+
+# RUN wget https://github.com/realsenseai/librealsense/archive/refs/tags/v2.55.1.tar.gz && tar -xf v2.55.1.tar.gz  && rm -fr v2.55.1.tar.gz &&\
+#     mv librealsense-2.55.1/ librealsense &&\
+
+RUN git clone --depth 1 https://github.com/realsenseai/librealsense.git &&\
+    cd librealsense &&\
+    mkdir -p build && cd build &&\
+    cmake .. \
+        #  -DBUILD_WITH_CUDA=true \
+        #  -DBUILD_CUDA_HOST_COMPILER=/usr/bin/g++-12 \
+         -DFORCE_RSUSB_BACKEND=ON \
+         -DCMAKE_BUILD_TYPE=release \
+         -DBUILD_EXAMPLES=false \
+         -DBUILD_GRAPHICAL_EXAMPLES=false &&\
+    cmake --build . --parallel $(nproc) &&\
+    make &&\
+    make install
 
 # ===========================
 # INSTALL GAZYEBO
