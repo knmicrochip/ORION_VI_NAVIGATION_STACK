@@ -45,8 +45,8 @@ RUN git clone --depth 1 https://github.com/realsenseai/librealsense.git &&\
 
 RUN sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
-RUN sudo apt-get update
-RUN sudo apt-get install gz-harmonic
+RUN sudo apt-get update &&\
+    sudo apt-get install gz-harmonic -y
 
 
 # ===========================
@@ -60,7 +60,7 @@ RUN apt-get update && apt-get install -y \
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
     ros-$ROS_DISTRO-ros2-control \
-    ros-$ROS_DISTRO-gz-ros2-control \
+    ros-$ROS_DISTRO-gz-ros2-control &&\
     rm -rf /var/lib/apt/lists/*
 
 # set environment variables so ros can talk to other machines on the network
