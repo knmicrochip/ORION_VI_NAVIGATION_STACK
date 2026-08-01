@@ -60,6 +60,7 @@ RUN apt-get update && apt-get install -y \
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
     ros-$ROS_DISTRO-ros2-control \
+    ros-$ROS_DISTRO-rviz2 \
     ros-$ROS_DISTRO-gz-ros2-control &&\
     rm -rf /var/lib/apt/lists/*
 
@@ -72,14 +73,14 @@ LABEL name='orion'
 # copy the files, probably could be slimmed down
 COPY . ${WS_DIR}
 
-# building the ROS2 package inside the docker 
+# building the ROS2 package inside the docker
 RUN colcon build --packages-select orion_vi_bringup_pkg
 RUN colcon build --packages-select orion_vi_description
-RUN colcon build --packages-select swerve_drive_controller
 
 ARG DEBIAN_FRONTEND=dialog
 
-CMD ["/bin/bash", "-c", "source ${WS_DIR}/install/setup.bash && ros2 launch orion_vi_bringup_pkg simulation_launch.py" ]
+CMD ["/bin/bash", "-c", "source . ~ros2_ws/install/setup.bash && colcon build --packages-select swerve_drive_controller
+&& source ${WS_DIR}/install/setup.bash && ros2 launch orion_vi_bringup_pkg simulation_launch.py" ]
 
 # this dockerfile is for running the full navigation stack with gazebo simulation
 # see DOCKER.md for more information
