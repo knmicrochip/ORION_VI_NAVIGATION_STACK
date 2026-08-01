@@ -64,6 +64,10 @@ We are also looking into adding YOLO based object detection for detecting switch
 - [x] fix steamdeck input with guID
 - [ ] set up foxglove
 - [ ] nipisać funkcje w pythonie do walidacji i ograniczenia wektora prędkości
+- [ ] github actions
+  - [ ] gazebo
+  - [ ] bringup testing
+  - [ ] auto linter that screams on colcon build
 
 ---
 
@@ -116,10 +120,10 @@ Aby stworzyć środowisko developerskie patrz na [DEVELOPMENT.md](./docs/DEVELOP
 ## Xarco, Gazebo, Symulacja
 
 By uruchomić w trybie symulacji użyj komendy:
-``
+```
+colcon build
 ros2 launch orion_vi_bringup_pkg simulation_launch.py
-``
-.
+```
 
 # PLAN na ERC
 
