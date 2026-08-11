@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
-<xacro:macro name="add_realsense" params="suffix">
-    <gazebo reference="realsense_${suffix}_link">
-    <sensor name="realsense_d435i_${suffix}" type="rgbd_camera">
+<xacro:macro name="add_realsense">
+    <gazebo reference="realsense">
+    <sensor name="realsense_d435i" type="rgbd_camera">
         <update_rate>60</update_rate>
-        <topic>realsense_d435i_${suffix}</topic>
+        <topic>realsense_d435i</topic>
         <camera name="camera">
           <horizontal_fov>1.0472</horizontal_fov>
           <lens>

@@ -16,8 +16,8 @@
         </xacro:unless>
       </hardware>
 
-      <xacro:macro name="turntable" params="prefix topic_state topic_com">
-        <joint name="${prefix}_turntable_joint">
+      <xacro:macro name="turntable" params="suffix topic_state topic_com">
+        <joint name="turntable_${suffix}_joint">
           <command_interface name="position">
             <param name="topic">${topic_com}</param>
           </command_interface>
@@ -27,8 +27,8 @@
         </joint>
       </xacro:macro>
 
-      <xacro:macro name="wheel" params="prefix topic_state topic_com">
-        <joint name="${prefix}_wheel_joint">
+      <xacro:macro name="wheel" params="suffix topic_state topic_com">
+        <joint name="wheel_${suffix}_joint">
           <command_interface name="velocity">
             <param name="topic">${topic_com}</param>
           </command_interface>
@@ -38,15 +38,15 @@
         </joint>
       </xacro:macro>
 
-      <xacro:wheel prefix="left_front" topic_state="/left_front_wheel/state" topic_com="/left_front_wheel/com"/>
-      <xacro:wheel prefix="left_rear" topic_state="/left_rear_wheel/state" topic_com="/left_rear_wheel/com"/>
-      <xacro:wheel prefix="right_front" topic_state="/right_front_wheel/state" topic_com="/right_front_wheel/com"/>
-      <xacro:wheel prefix="right_rear" topic_state="/right_rear_wheel/state" topic_com="/right_rear_wheel/com"/>
+      <xacro:wheel suffix="F_L" topic_state="/left_front_wheel/state" topic_com="/left_front_wheel/com"/>
+      <xacro:wheel suffix="R_L" topic_state="/left_rear_wheel/state" topic_com="/left_rear_wheel/com"/>
+      <xacro:wheel suffix="F_R" topic_state="/right_front_wheel/state" topic_com="/right_front_wheel/com"/>
+      <xacro:wheel suffix="R_R" topic_state="/right_rear_wheel/state" topic_com="/right_rear_wheel/com"/>
 
-      <xacro:turntable prefix="left_front" topic_state="/left_front_turntable/state" topic_com="/left_front_turntable/com"/>
-      <xacro:turntable prefix="left_rear" topic_state="/left_rear_turntable/state" topic_com="/left_rear_turntable/com"/>
-      <xacro:turntable prefix="right_front" topic_state="/right_front_turntable/state" topic_com="/right_front_turntable/com"/>
-      <xacro:turntable prefix="right_rear" topic_state="/right_rear_turntable/state" topic_com="/right_rear_turntable/com"/>
+      <xacro:turntable suffix="F_L" topic_state="/left_front_turntable/state" topic_com="/left_front_turntable/com"/>
+      <xacro:turntable suffix="R_L" topic_state="/left_rear_turntable/state" topic_com="/left_rear_turntable/com"/>
+      <xacro:turntable suffix="F_R" topic_state="/right_front_turntable/state" topic_com="/right_front_turntable/com"/>
+      <xacro:turntable suffix="R_R" topic_state="/right_rear_turntable/state" topic_com="/right_rear_turntable/com"/>
 
     </ros2_control>
 

@@ -26,7 +26,7 @@ from launch.actions import (
 )
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution, Command, FindExecutable
 from launch_ros.actions import Node
 from launch_ros.actions import PushROSNamespace
 from launch_ros.descriptions import ParameterFile
@@ -157,6 +157,23 @@ def generate_launch_description():
         config_file=LaunchConfiguration('bridge_config_file'),
     )
 
+    robot_description_content = Command(
+            [
+                PathJoinSubstitution([FindExecutable(name="xacro")]),
+                " ",
+                PathJoinSubstitution(
+                    [
+                        FindPackageShare("orion_vi_description"),
+                        "urdf",
+                        "orionVI.urdf.xacro",
+                    ]
+                ),
+                " ",
+                "use_gazebo:=",
+                LaunchConfiguration("use_gazebo"),
+            ]
+        )
+
     bringup_sim_group = GroupAction([
         PushROSNamespace(condition=IfCondition(use_namespace), namespace=namespace),
 
@@ -179,30 +196,34 @@ def generate_launch_description():
             }.items(),
         ),
 
-
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare("ros_gz_sim"), "/launch/gz_sim.launch.py"]
             ),
             launch_arguments={
                 "gz_args": ["-r ",PathJoinSubstitution([FindPackageShare("orion_vi_description"), 'urdf','world_demo.sdf'])],
-                'on_exit_shutdown': 'True'
+                'on_exit_shutdown': 'True',
             }.items(),
         ),
 
-        Node(
-            package="ros_gz_sim",
-            executable="create",
-            output="screen",
-            arguments=[
-                "-topic",
-                "/robot_description",
-                "-name",
-                "orionVI_system_position",
-                "-allow_renaming",
-                "true",
-            ],
-        ),
+        IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            [PathJoinSubstitution([FindPackageShare('ros_gz_sim'),
+                                   'launch',
+                                   'gz_spawn_model.launch.py'])]),
+        launch_arguments=[('world', 'demo'),
+                          #('file', file),
+                          ('model_string', robot_description_content),
+                          #('topic', topic),
+                          ('entity_name', 'orion_vi'),
+                          ('allow_renaming', 'true'),
+                          ('x', '0.0'),
+                          ('y', '0.0'),
+                          ('z', '1.0'),
+                          ('R', '0.0'),
+                          ('P', '0.0'),
+                          ('Y', '0.0'),
+                          ]),
 
     ])
     
