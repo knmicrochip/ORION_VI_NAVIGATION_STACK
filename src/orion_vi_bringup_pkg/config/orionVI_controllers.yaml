@@ -11,15 +11,15 @@ controller_manager:
 
 swerve_drive_controller:
   ros__parameters:
-      front_left_wheel_joint: "left_front_wheel_joint"
-      front_right_wheel_joint: "right_front_wheel_joint"
-      rear_left_wheel_joint: "left_rear_wheel_joint"
-      rear_right_wheel_joint: "right_rear_wheel_joint"
+      front_left_wheel_joint: "wheel_F_L_joint"
+      front_right_wheel_joint: "wheel_F_R_joint"
+      rear_left_wheel_joint: "wheel_R_L_joint"
+      rear_right_wheel_joint: "wheel_R_R_joint"
       
-      front_left_axle_joint: "left_front_turntable_joint"
-      front_right_axle_joint: "right_front_turntable_joint"
-      rear_left_axle_joint: "left_rear_turntable_joint"
-      rear_right_axle_joint: "right_rear_turntable_joint"
+      front_left_axle_joint: "turntable_F_L_joint"
+      front_right_axle_joint: "turntable_F_R_joint"
+      rear_left_axle_joint: "turntable_R_L_joint"
+      rear_right_axle_joint: "turntable_R_R_joint"
       
       wheelbase: 0.840 
       trackwidth: 0.843
