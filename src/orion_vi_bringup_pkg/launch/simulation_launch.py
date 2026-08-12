@@ -56,6 +56,7 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration("use_rviz")
     bridge_config_file = LaunchConfiguration("bridge_config_file")
     bridge_name = LaunchConfiguration("bridge_name")
+    disable_nav = LaunchConfiguration("disable_nav")
 
     config_dir = os.path.join(FindPackageShare(package='orion_vi_bringup').find('orion_vi_bringup_pkg'),'config')
     params_file = os.path.join(config_dir, 'bringup_config.yaml')
@@ -152,6 +153,10 @@ def generate_launch_description():
         'bridge_name', default_value="ros_gz_bridge", description='Name of ros_gz_bridge node'
     )
 
+    declare_disable_nav_cmd = DeclareLaunchArgument(
+        'disable_nav', default_value='False', description='Whether to disable nav2 and slam for debugging'
+    )
+
     ros_gz_bridge_action = RosGzBridge(
         bridge_name=LaunchConfiguration('bridge_name'),
         config_file=LaunchConfiguration('bridge_config_file'),
@@ -193,6 +198,7 @@ def generate_launch_description():
                 'use_keepout_zones': 'False',
                 'use_speed_zones': 'False',
                 'container_name': 'nav2_container',
+                'disable_nav' : disable_nav,
             }.items(),
         ),
 
@@ -244,6 +250,7 @@ def generate_launch_description():
     ld.add_action(declare_use_gazebo_cmd)
     ld.add_action(declare_bridge_name_cmd)
     ld.add_action(declare_bridge_config_file_cmd)
+    ld.add_action(declare_disable_nav_cmd)
     ld.add_action(ros_gz_bridge_action)
     ld.add_action(bringup_sim_group)
     return ld

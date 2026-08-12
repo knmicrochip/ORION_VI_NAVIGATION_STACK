@@ -24,7 +24,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     SetEnvironmentVariable,
 )
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -53,6 +53,7 @@ def generate_launch_description():
     use_localization = LaunchConfiguration('use_localization')
     use_rviz = LaunchConfiguration("use_rviz")
     use_gazebo = LaunchConfiguration("use_gazebo")
+    disable_nav = LaunchConfiguration("disable_nav")
 
     config_dir = os.path.join(FindPackageShare(package='orion_vi_bringup').find('orion_vi_bringup_pkg'),'config')
     params_file = os.path.join(config_dir, 'bringup_config.yaml')
@@ -154,12 +155,16 @@ def generate_launch_description():
         'use_gazebo', default_value='False', description='Whether is running in simulation mode'
     )
 
+    declare_disable_nav_cmd = DeclareLaunchArgument(
+        'disable_nav', default_value='False', description='Whether to disable nav2 and slam for debugging'
+    )
+
     # Specify the actions
     bringup_cmd_group = GroupAction(
         [
             PushROSNamespace(condition=IfCondition(use_namespace), namespace=namespace),
             Node(
-                condition=IfCondition(use_composition),
+                condition=IfCondition(PythonExpression(['not ', disable_nav, ' and ', use_composition])),
                 name='nav2_container',
                 package='rclcpp_components',
                 executable='component_container_isolated',
@@ -184,6 +189,7 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(
                     os.path.join(launch_dir, 'slam_launch.py')
                 ),
+                condition=UnlessCondition(disable_nav),
                 # condition=IfCondition(PythonExpression([slam, ' and ', use_localization])),
                 launch_arguments={
                     'namespace': namespace,
@@ -228,6 +234,7 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(
                     os.path.join(launch_dir, 'navigation_launch.py')
                 ),
+                condition=UnlessCondition(disable_nav),
                 launch_arguments={
                     'namespace': namespace,
                     'use_sim_time': use_sim_time,
@@ -291,6 +298,7 @@ def generate_launch_description():
     ld.add_action(declare_use_localization_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(declare_use_gazebo_cmd)
+    ld.add_action(declare_disable_nav_cmd)
     
     # Add the actions to launch all of the navigation nodes
     ld.add_action(bringup_cmd_group)
