@@ -103,7 +103,7 @@ def generate_launch_description():
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='false',
+        default_value='True',
         description='Use simulation (Gazebo) clock if true',
     )
 
@@ -140,7 +140,7 @@ def generate_launch_description():
     )
 
     declare_use_gazebo_cmd = DeclareLaunchArgument(
-        'use_gazebo', default_value='False', description='Whether is running in simulation mode'
+        'use_gazebo', default_value='True', description='Whether is running in simulation mode'
     )
 
     declare_bridge_config_file_cmd = DeclareLaunchArgument(
@@ -210,6 +210,11 @@ def generate_launch_description():
                 "gz_args": ["-r ",PathJoinSubstitution([FindPackageShare("orion_vi_description"), 'urdf','world_demo.sdf'])],
                 'on_exit_shutdown': 'True',
             }.items(),
+        ),
+
+        SetEnvironmentVariable(
+        name='QT_QPA_PLATFORM', 
+        value='eglfs'
         ),
 
         IncludeLaunchDescription(

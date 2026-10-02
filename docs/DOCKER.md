@@ -5,6 +5,9 @@ I am using podman in my developement machine, this is the way I set up with dock
 
 `docker` might behave differently
 
+if you are using distrobox I recommend setting up an alias `echo "alias podman=podman-remote" >> ~/.bashrc`
+
+
 This container will run the navigation bringup
 
 
@@ -21,11 +24,33 @@ podman build -f new.Dockerfile -t orion-bringup .
 
 run for testing: 
 ```
-podman run --rm --name ORION-BRINGUP --privileged -it \
+podman run --rm --name ORION_BRINGUP --privileged -it \
  --network host --ipc host --replace --group-add keep-groups localhost/orion-bringup:latest
 ```
 
 for deployment we need persistent container that won't vanish into the aether
+
+## Simulation Container
+
+This step might take a long time (30 mins for the first build without cache)
+
+```
+cd ~/ORION_VI_NAVIGATION_STACK
+podman build -f simulation.Dockerfile -t orion-sim .
+```
+To get the GUI working we need to pass a bunch of stuff 
+
+```
+ podman run --rm --name ORION_SIM \
+  -it --network host --ipc host\
+  -e WAYLAND_DISPLAY="$WAYLAND_DISPLAY" \
+  -e XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
+  -e DISPLAY="$DISPLAY" \
+  -v "/tmp/.X11-unix:/tmp/.X11-unix:ro" \
+  -v "$XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR" \
+  localhost/orion-sim:latest
+```
+
 
 
 ## RealSense from source container:
@@ -59,3 +84,11 @@ podman-remote run --rm --name ORION_BIN \
 
 sudo apt install ros-jazzy-rqt-graph -y && source /ros_entrypoint.sh && QT_QPA_PLATFORM=wayland ros2 run rqt_graph rqt_graph
 ```
+
+# TODO
+
+- [ ] Swerve drive controller fails
+- [x] Gazebo doesn't see a display
+- [ ] bad robot description
+- [x] realsense not found 
+- [ ] enable GPU acceleration
