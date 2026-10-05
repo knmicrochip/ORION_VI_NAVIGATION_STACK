@@ -52,6 +52,7 @@ mkdir -p ~/.config/autostart && printf '%s\n' '[Desktop Entry]' 'Type=Applicatio
 ```
  podman run --rm --name ORION_SIM \
   -it --network host --ipc host\
+  --device nvidia.com/gpu=all\
   -e WAYLAND_DISPLAY="$WAYLAND_DISPLAY" \
   -e XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \
   -e DISPLAY="$DISPLAY" \
@@ -100,4 +101,4 @@ sudo apt install ros-jazzy-rqt-graph -y && source /ros_entrypoint.sh && QT_QPA_P
 - [x] Gazebo doesn't see a display
 - [ ] bad robot description
 - [x] realsense not found 
-- [ ] enable GPU acceleration
+- [x] enable GPU acceleration
