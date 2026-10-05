@@ -40,6 +40,15 @@ podman build -f simulation.Dockerfile -t orion-sim .
 ```
 To get the GUI working we need to pass a bunch of stuff 
 
+>#### IMPORTANT!
+>You need to run `xhost +local:` on your host machine every restart to connect X11 or xwayland to the container 
+>To do it permamently add autostart script with:
+```
+mkdir -p ~/.config/autostart && printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=xhost local' 'Exec=xhost +local:' 'Terminal=false' 'X-GNOME-Autostart-enabled=true' > ~/.config/autostart/xhost-local.desktop
+```
+
+
+
 ```
  podman run --rm --name ORION_SIM \
   -it --network host --ipc host\
