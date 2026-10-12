@@ -91,23 +91,23 @@ def generate_launch_description():
 		]
 	)
 
-	if not declare_use_gazebo_cmd:
-		ld.add_action(
-			IncludeLaunchDescription(
-				PythonLaunchDescriptionSource([os.path.join(
-					get_package_share_directory('realsense2_camera'), 'launch'),
-					'/rs_launch.py']),
-					condition=UnlessCondition(use_sim_time),
-					launch_arguments={'camera_namespace': '',
-									'enable_gyro': 'true',
-									'enable_accel': 'true',
-									'unite_imu_method': '2', # 2-linear_interpolation 
-									'enable_infra1': 'true',
-									'enable_infra2': 'true',
-									'align_depth.enable': 'true',
-									'enable_sync': 'true',
-									'rgb_camera.color_profile': '640x360x30'}.items(),
-					),
+	# if not declare_use_gazebo_cmd:
+	ld.add_action(
+		IncludeLaunchDescription(
+			PythonLaunchDescriptionSource([os.path.join(
+				get_package_share_directory('realsense2_camera'), 'launch'),
+				'/rs_launch.py']),
+				condition=UnlessCondition(use_sim_time),
+				launch_arguments={'camera_namespace': '',
+								'enable_gyro': 'true',
+								'enable_accel': 'true',
+								'unite_imu_method': '2', # 2-linear_interpolation 
+								'enable_infra1': 'true',
+								'enable_infra2': 'true',
+								'align_depth.enable': 'true',
+								'enable_sync': 'true',
+								'rgb_camera.color_profile': '640x360x30'}.items(),
+				),
 	)
 
 	ld.add_action(declare_use_gazebo_cmd)
