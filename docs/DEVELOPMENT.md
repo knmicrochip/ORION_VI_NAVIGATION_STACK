@@ -116,7 +116,7 @@ https://gazebosim.org/docs/harmonic/install_ubuntu/
 
 ### Dodatkowe fajne programy
 
-`sudo apt install ros-$ROS_DISTRO-rqt-tf-tree ros-$ROS_DISTRO-rqt-image-view ros-$ROS_DISTRO-rqt-graph`
+`sudo apt install ros-$ROS_DISTRO-rqt-tf-tree ros-$ROS_DISTRO-rqt-image-view ros-$ROS_DISTRO-rqt-graph ros-$ROS_DISTRO-joint-state-publisher-gui`
 
 pokazuje nody i topiki
 
@@ -129,6 +129,10 @@ pokazuje TFy:
 pokazuje kamerę
 
 `ros2 run rqt_image_view rqt_image_view`
+
+nie mając danych z łazika można dać sztuczne dane
+
+`ros2 run joint_state_publisher_gui joint_state_publisher_gui`
 
 Dodaj aliasy
 

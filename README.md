@@ -43,11 +43,11 @@ We are also looking into adding YOLO based object detection for detecting switch
   - [ ]  błędy
     - [ ]  marsjard zaginął
     - [ ]  ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
-    - [x]  Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
-    - [x]  lack of images from deapth camera
+    - [X]  Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+    - [X]  lack of images from deapth camera
     - [ ]  rviz amdgpu fails
     - [ ]  Failed to create a bridge for topic [/realsense_front/camera_info] with ROS2 type [sensor_msgs/msg/PointCloud2] to topic [/realsense_d435i/points] with Gazebo Transport type [gz.msgs.PointCloudPacked]: could not create publisher: create_publisher() called for existing topic name rt/realsense_front/camera_info with incompatible type sensor_msgs::msg::dds_::PointCloud2_, at ./src/publisher.cpp:145, at ./src/rcl/publisher.c:117
-    - [ ] zły topic kamery
+    - [ ]  zły topic kamery
 - [ ]  Rozbudowa apki do sterowania
   - [ ]  Podgląd kamer
 - [ ]  Spisać hasła do różnych rzeczy sieciowych
@@ -74,8 +74,6 @@ We are also looking into adding YOLO based object detection for detecting switch
   - [ ]  gazebo
   - [ ]  bringup testing
   - [ ]  auto linter that screams on colcon build
-- [ ]  błędy różne
-  - [ ]  realsense node nie odpala się
 
 ---
 
@@ -98,6 +96,7 @@ Will make the 10x dev:
 Good to have:
 
 - [ ]  Documentation to show to people
+- [ ]  apka do definiowania pozycji aruco na topicu?
 
 PRs to make:
 
@@ -122,6 +121,7 @@ patrz [DOCKER.md](./docs/DOCKER.md)
 
 Aby stworzyć środowisko developerskie patrz na [DEVELOPMENT.md](./docs/DEVELOPMENT.md)
 
+jeśli nie działają TFy z powodu braku łazika wysyłającego dane telemetrii: Użyj  `ros2 run joint_state_publisher_gui joint_state_publisher_gui` aby stworzyć dane syntetyczne
 ## ROS2
 
 - nazwa paczki {nazwa}_pkg
