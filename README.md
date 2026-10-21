@@ -41,13 +41,16 @@ We are also looking into adding YOLO based object detection for detecting switch
   - [ ]  Kamery
   - [ ]  behavior tree / state machine
   - [ ]  błędy
-    - [ ]  marsjard zaginął
+    - [x]  marsjard zaginął
     - [ ]  ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
     - [X]  Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
     - [X]  lack of images from deapth camera
-    - [ ]  rviz amdgpu fails
+    - [x]  rviz amdgpu fails
     - [ ]  Failed to create a bridge for topic [/realsense_front/camera_info] with ROS2 type [sensor_msgs/msg/PointCloud2] to topic [/realsense_d435i/points] with Gazebo Transport type [gz.msgs.PointCloudPacked]: could not create publisher: create_publisher() called for existing topic name rt/realsense_front/camera_info with incompatible type sensor_msgs::msg::dds_::PointCloud2_, at ./src/publisher.cpp:145, at ./src/rcl/publisher.c:117
     - [ ]  zły topic kamery
+    - [ ]  robot spawnuje się kilka razy
+    - [ ]  centralny dyfer nie działa
+    - [ ]  body nie jest statyczne
 - [ ]  Rozbudowa apki do sterowania
   - [ ]  Podgląd kamer
 - [ ]  Spisać hasła do różnych rzeczy sieciowych
