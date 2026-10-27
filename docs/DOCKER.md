@@ -61,6 +61,10 @@ mkdir -p ~/.config/autostart && printf '%s\n' '[Desktop Entry]' 'Type=Applicatio
   localhost/orion-sim:latest
 ```
 
+alternatywne launch dla amdgpu 
+```
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia podman run --rm --name ORION_SIM   -it --network host --ipc host  --device nvidia.com/gpu=all  -e WAYLAND_DISPLAY="$WAYLAND_DISPLAY"   -e XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR"   -e DISPLAY="$DISPLAY"   -v "/tmp/.X11-unix:/tmp/.X11-unix:ro"   -v "$XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR" -v /dev/dri:/dev/dri  localhost/orion-sim:latest
+```
 
 
 ## RealSense from source container:

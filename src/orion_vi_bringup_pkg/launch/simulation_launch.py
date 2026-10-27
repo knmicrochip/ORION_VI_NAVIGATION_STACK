@@ -23,6 +23,8 @@ from launch.actions import (
     GroupAction,
     IncludeLaunchDescription,
     SetEnvironmentVariable,
+    ExecuteProcess,
+    TimerAction
 )
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -229,17 +231,28 @@ def generate_launch_description():
                           ('entity_name', 'orion_vi'),
                           ('allow_renaming', 'true'),
                           ('x', '0.0'),
-                          ('y', '0.0'),
-                          ('z', '1.0'),
+                          ('y', '1.0'),
+                          ('z', '0.5'),
                           ('R', '0.0'),
                           ('P', '0.0'),
                           ('Y', '0.0'),
                           ]),
 
     ])
+
+    delete_robot = ExecuteProcess(
+        cmd=[
+            'ros2', 'service', 'call',
+            '/delete_entity',
+            'gazebo_msgs/srv/DeleteEntity',
+            "{name: 'orion_vi'}"
+        ],
+        output='screen'
+    )
     
 
     ld = LaunchDescription()
+    # ld.add_action(delete_robot)
     ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_use_namespace_cmd)
     ld.add_action(declare_slam_cmd)
@@ -257,5 +270,10 @@ def generate_launch_description():
     ld.add_action(declare_bridge_config_file_cmd)
     ld.add_action(declare_disable_nav_cmd)
     ld.add_action(ros_gz_bridge_action)
-    ld.add_action(bringup_sim_group)
+    ld.add_action(
+        TimerAction(
+            period=0.5,
+            actions=[bringup_sim_group]
+        )
+    )
     return ld
