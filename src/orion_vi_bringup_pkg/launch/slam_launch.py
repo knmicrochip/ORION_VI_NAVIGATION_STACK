@@ -4,7 +4,7 @@ from launch_ros.actions import Node,SetParameter
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch.conditions import UnlessCondition
+from launch.conditions import UnlessCondition, IfCondition
 
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
@@ -15,6 +15,12 @@ def generate_launch_description():
 
 	declare_use_gazebo_cmd = DeclareLaunchArgument(
 		'use_gazebo', default_value='False', description='Whether is running in simulation mode'
+	)
+
+	declare_use_sim_time_cmd = DeclareLaunchArgument(
+		'use_sim_time',
+		default_value='false',
+		description='Use simulation (Gazebo) clock if true',
 	)
 
 	vo_parameters={
@@ -38,7 +44,7 @@ def generate_launch_description():
 		'map_filter_angle':30.0,
 
 		"landmark_linear_variance": 0.005, #FIX double 
-        "landmark_angular_variance": 9999.0, #FIX double
+		"landmark_angular_variance": 9999.0, #FIX double
 		"Optimizer/PriorsIgnored": "False", #WTF! needs string 
 		# "Marker/Priors":'1 -3.56 1.583 0.50 0 1.5708 0|2 -1.495 1.605 4.91 0 3.14159 0'
 		# 1 0 0 1 0 0 0|2 1 0 1 0 0 1.57
@@ -65,7 +71,8 @@ def generate_launch_description():
 		
 	ld = LaunchDescription(
 		[
-		
+			declare_use_gazebo_cmd,
+			declare_use_sim_time_cmd,
 			# SetParameter(name='unite_imu_method')
 
 				Node(
@@ -79,50 +86,18 @@ def generate_launch_description():
 			parameters=[slam_parameters],
 			remappings=slam_remappings,
 			arguments=['-d']),
-
-			 # Compute quaternion of the IMU
-        		Node(
-            package='imu_filter_madgwick', executable='imu_filter_madgwick_node', output='screen',
-            parameters=[{'use_mag': False, 
-                         'world_frame':'enu', 
-                         'publish_tf':False}],
-            remappings=[('imu/data_raw', '/camera/imu')]),
-
+            IncludeLaunchDescription(
+				PythonLaunchDescriptionSource(
+                    os.path.join(get_package_share_directory("orion_vi_bringup_pkg"),'launch','camera_launch.py')
+                ),
+                condition=UnlessCondition(use_gazebo),
+			),
 		]
 	)
 
-	# if not declare_use_gazebo_cmd:
-	ld.add_action(
-		IncludeLaunchDescription(
-			PythonLaunchDescriptionSource([os.path.join(
-				get_package_share_directory('realsense2_camera'), 'launch'),
-				'/rs_launch.py']),
-				condition=UnlessCondition(use_sim_time),
-				launch_arguments={'camera_namespace': '',
-								'enable_gyro': 'true',
-								'enable_accel': 'true',
-								'unite_imu_method': '2', # 2-linear_interpolation 
-								'enable_infra1': 'true',
-								'enable_infra2': 'true',
-								'align_depth.enable': 'true',
-								'enable_sync': 'true',
-								'rgb_camera.color_profile': '640x360x30'}.items(),
-				),
-	)
 
-	ld.add_action(declare_use_gazebo_cmd)
-	# nav2_bringup_launch = IncludeLaunchDescription(
-	# 	PythonLaunchDescriptionSource(
-	# 		#można to zrobić ładniej
-	# 		os.path.join(FindPackageShare(package='nav2_bringup').find('nav2_bringup'),'launch','bringup_launch.py')),
 
-	# 		launch_arguments={
-	# 			#tmp
-	# 		}
-	# 	)
-	
 
-	# ld.add_action(nav2_bringup_launch)
 
 	return ld
 	

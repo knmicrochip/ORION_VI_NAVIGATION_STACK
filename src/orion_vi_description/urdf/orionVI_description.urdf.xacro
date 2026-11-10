@@ -255,11 +255,9 @@
     <parent link="base_link" />
     <child link="camera_link" />
   </joint>
-  <joint name="main_body_joint" type="revolute">
+  <joint name="main_body_joint" type="fixed">
     <parent link="base_link" />
     <child link="main_body" />
-    <axis xyz="0 0 1" />
-    <limit effort="10" velocity="1" lower="-3.141593" upper="3.141593" />
   </joint>
   <joint name="module_F_joint" type="fixed">
     <parent link="base_link" />
@@ -283,6 +281,7 @@
     <child link="rocker_R" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1" lower="-3.141593" upper="3.141593" />
+    <mimic joint="rocker_L_joint" multiplier="-1" />
   </joint>
   <joint name="turntable_F_L_joint" type="revolute">
     <origin xyz="0.446495 0.090228 -0.230488" rpy="0 0 0" />

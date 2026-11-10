@@ -62,3 +62,6 @@ test.py
 
 src/orion_vi_bringup_pkg/launch/from_nav2
 
+# blender
+
+*.blend1

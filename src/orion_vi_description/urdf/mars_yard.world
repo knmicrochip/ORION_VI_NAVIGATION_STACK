@@ -19,14 +19,14 @@
 
     <!-- Lightweight textured ground: use a 2-triangle quad for visual, keep collision as a simple plane -->
     <model name="erc_ground">
-      <pose>-1 0 -1.4 1.57079632679 0 0</pose>
+      <pose>-1 0 -1.8 1.57079632679 0 0</pose>
       <static>true</static>
       <link name="ground_link">
         <visual name="ground_visual">
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
-              <uri>file://./ERC_Groundv4.glb</uri>
+              <uri>package://orion_vi_description/urdf/meshes/ERC_Groundv4.glb</uri>
             </mesh>
           </geometry>
         </visual>
@@ -34,7 +34,7 @@
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
-              <uri>file://./ERC_Groundv5_small.glb</uri>
+              <uri>package://orion_vi_description/urdf/meshes/ERC_Groundv5_small.glb</uri>
             </mesh>
           </geometry>
         </collision>
