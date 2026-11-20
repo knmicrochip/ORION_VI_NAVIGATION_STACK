@@ -24,10 +24,18 @@
 #include <string>
 #include <vector>
 
-#include <mqtt/client.h>
+#include <mqtt/async_client.h>
 
 // #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
+
+const std::string MQTT_SERVER{"192.168.1.1"}; //rasberrka
+const std::string CLIENT_ID{"ros_control_hardware_interface"}; //??
+const std::string CMD_TOPIC{""}; //jak zrobić topiki dla wachaczy
+const std::string TELEMETRY_TOPIC{""}; //ten czy inny plugin ros_control
+
+const int QOS = 1;
+
 
 namespace orion_vi_hardware_interface
 {
@@ -90,6 +98,28 @@ hardware_interface::CallbackReturn OrionVIWheels::on_init(
 hardware_interface::CallbackReturn OrionVIWheels::on_configure(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
+
+  // this is the part where you connect to MQTT
+
+  auto clientOptions = mqtt::create_options_builder()
+                          // .server_uri(MQTT_SERVER)
+                          .send_while_disconnected(true, true)
+                          .max_buffered_messages(0)
+                          .delete_oldest_messages(true)
+                          // .restore_messeges(false)
+                          .finalize();
+
+  mqtt::async_client client(MQTT_SERVER,CLIENT_ID, clientOptions,NULL);
+
+  auto connectionOptions = mqtt::connect_options_builder()
+                    .clean_session()
+                    .keep_alive_interval(std::chrono::seconds(5))
+                    .automatic_reconnect(std::chrono::seconds(1), std::chrono::seconds(5))
+                    .finalize();
+
+  client.connect(connectionOptions);
+
+
   // // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
   // RCLCPP_INFO(get_logger(), "Configuring ...please wait...");
 
@@ -118,6 +148,10 @@ hardware_interface::CallbackReturn OrionVIWheels::on_configure(
 hardware_interface::CallbackReturn OrionVIWheels::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
+
+  //send command to power on the rockers - could be skipped for now
+
+
   // // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
   // RCLCPP_INFO(get_logger(), "Activating ...please wait...");
 
@@ -162,6 +196,8 @@ hardware_interface::CallbackReturn OrionVIWheels::on_deactivate(
 hardware_interface::return_type OrionVIWheels::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
+  //read wheel and IMU states
+
   RCLCPP_FATAL(get_logger(),"OrionVIWheels::read not implemented");
   return hardware_interface::return_type::ERROR;
 
@@ -171,6 +207,7 @@ hardware_interface::return_type OrionVIWheels::read(
 hardware_interface::return_type OrionVIWheels::write(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
+  //send commands
   RCLCPP_FATAL(get_logger(),"OrionVIWheels::write not implemented");
    return hardware_interface::return_type::ERROR;
 

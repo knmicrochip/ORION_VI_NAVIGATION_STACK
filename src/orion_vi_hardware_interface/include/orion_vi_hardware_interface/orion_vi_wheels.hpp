@@ -53,6 +53,13 @@ public:
   hardware_interface::return_type write(
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
+    //on_cleanup
+    //on_shutdown
+    //on_error
+    //export_state_interfaces
+    //export_command_interfaces
+
+
 // private:
 //   // Parameters for the RRBot simulation
 //   double hw_start_sec_;
